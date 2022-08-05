@@ -18,6 +18,7 @@ import axios from "axios";
 import Uploader from "components/Uploader";
 import Loader from "../Loader";
 import { useAppSessionContext } from "context/AppSession";
+import Link from "next/link";
 
 export default function Official({ onClose, fetchRows, participant = {} }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -144,6 +145,13 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
       {isLoading && <Loader />}
       <DialogTitle>
         <Typography>{participant.name}</Typography>
+        <Link passHref href={"/ticket/" + participant.idString}>
+          <a>
+            <Button variant="contained" size="small">
+              Card
+            </Button>
+          </a>
+        </Link>
         <IconButton
           onClick={onClose}
           sx={{
