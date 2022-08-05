@@ -28,7 +28,7 @@ export default function Participant() {
   const [participants, setParticipants] = useState([]);
   const [officials, setOfficials] = useState([]);
 
-  const fetchParticipants = useCallback(async () => {
+  const fetchRows = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await axios.get("/api/participants");
@@ -58,15 +58,19 @@ export default function Participant() {
   }, []);
 
   useEffect(() => {
-    fetchParticipants();
-  }, [fetchParticipants]);
+    if (!participants.length) fetchRows();
+  }, [participants, fetchRows]);
 
   return (
     <Box>
-      <ListParticipant participants={participants} />
+      <ListParticipant
+        type="participant"
+        fetchRows={fetchRows}
+        participants={participants}
+      />
       {isLoading && <ListLoader />}
       <Button
-        disabled={!user.active || user.completed}
+        disabled={!user.active || user.completed || participants.length >= 14}
         fullWidth
         size="large"
         variant="contained"
@@ -75,10 +79,18 @@ export default function Participant() {
         <Add sx={{ mr: 1 }} />
         Tambah Peserta
       </Button>
-      <ListParticipant participants={officials} />
+      <ListParticipant
+        type="official"
+        fetchRows={fetchRows}
+        participants={officials}
+      />
       {isLoading && <ListLoader />}
       <Button
-        disabled={!user.active || user.completed}
+        disabled={
+          !user.active || user.completed || user.category === "univ"
+            ? officials.length >= 2
+            : officials.length >= 3
+        }
         fullWidth
         size="large"
         variant="contained"
