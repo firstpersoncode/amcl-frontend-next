@@ -131,7 +131,7 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
       {isLoading && <Loader />}
       <DialogTitle>
         <Typography>{participant.name}</Typography>
-        <Link passHref href={"/ticket/" + participant.idString}>
+        <Link passHref href={"/ticket/" + participant.idString} target="_blank">
           <a>
             <Button variant="contained" size="small">
               Card
