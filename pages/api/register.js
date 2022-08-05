@@ -1,7 +1,7 @@
 import axios from "axios";
 import nookies from "nookies";
 
-export default async function login(req, res) {
+export default async function register(req, res) {
   if (req.method !== "POST") return res.status(404).send();
 
   if (
@@ -22,17 +22,18 @@ export default async function login(req, res) {
 
     const isValid = validateCaptcha.data?.success;
 
-    if (!isValid) return res.status(403).send();
+    if (!isValid) return res.status(403).send("Invalid captcha");
   }
 
-  const { email, password } = req.body;
+  const { name, category, branch, email, password } = req.body;
 
-  if (!(email && password)) return res.status(403).send();
+  if (!(name && category && branch && email && password))
+    return res.status(403).send();
 
   try {
     const resp = await axios.post(
-      process.env.DASHBOARD_URL + "/user/login",
-      { email, password },
+      process.env.DASHBOARD_URL + "/user/register",
+      { name, category, branch, email, password },
       {
         headers: {
           "x-api-key": process.env.DASHBOARD_API_KEY,
@@ -49,7 +50,7 @@ export default async function login(req, res) {
       httpOnly: true,
     });
 
-    res.status(200).send("Berhasil login");
+    res.status(200).send("Berhasil terdaftar");
   } catch (err) {
     return res.status(500).send(err.response?.data || err);
   }

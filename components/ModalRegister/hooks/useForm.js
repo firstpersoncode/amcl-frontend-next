@@ -16,6 +16,27 @@ export default function useForm() {
 
   const validate = () => {
     let hasError = false;
+    if (!values.name) {
+      hasError = true;
+      setErrors((v) => ({ ...v, name: "Masukkan Nama sekolah" }));
+    }
+
+    if (!values.category) {
+      hasError = true;
+      setErrors((v) => ({
+        ...v,
+        category: "Pilih salah satu kategori sekolah",
+      }));
+    }
+
+    if (!values.branch) {
+      hasError = true;
+      setErrors((v) => ({
+        ...v,
+        branch: "Pilih salah satu cabang yang ingin diikuti",
+      }));
+    }
+
     if (!values.email) {
       hasError = true;
       setErrors((v) => ({ ...v, email: "Masukkan email" }));
@@ -57,8 +78,8 @@ export default function useForm() {
     } else {
       setIsLoading(true);
       try {
-        await axios.post("/api/login", { ...values });
-        replace("/participant");
+        await axios.post("/api/register", { ...values });
+        replace("/");
       } catch (err) {
         console.error(err);
         if (err.response?.data) setMessage(err.response.data);
@@ -72,8 +93,8 @@ export default function useForm() {
   const onCaptchaVerify = async (c) => {
     setIsLoading(true);
     try {
-      await axios.post("/api/login", { ...values, captcha: c });
-      replace("/participant");
+      await axios.post("/api/register", { ...values, captcha: c });
+      replace("/");
     } catch (err) {
       console.error(err);
       if (err.response?.data) setMessage(err.response.data);

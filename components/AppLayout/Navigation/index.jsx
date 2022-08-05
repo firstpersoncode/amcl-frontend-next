@@ -1,9 +1,15 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { Paper, BottomNavigation, BottomNavigationAction } from "@mui/material";
 import { LabelImportant, Group, Settings } from "@mui/icons-material";
 
 export default function Navigation() {
-  const [value, setValue] = useState("participant");
+  const { push, asPath } = useRouter();
+  const [value, setValue] = useState(asPath);
+  const onClick = (path) => (e) => {
+    e.preventDefault();
+    push(path);
+  };
 
   return (
     <Paper
@@ -18,18 +24,21 @@ export default function Navigation() {
         }}
       >
         <BottomNavigationAction
-          label={value === "school" ? "Sekolah" : ""}
-          value="school"
+          onClick={onClick("/school")}
+          label={value === "/school" ? "Sekolah" : ""}
+          value="/school"
           icon={<LabelImportant />}
         />
         <BottomNavigationAction
-          label={value === "participant" ? "Peserta" : ""}
-          value="participant"
+          onClick={onClick("/participant")}
+          label={value === "/participant" ? "Peserta" : ""}
+          value="/participant"
           icon={<Group />}
         />
         <BottomNavigationAction
-          label={value === "settings" ? "Pengaturan" : ""}
-          value="settings"
+          onClick={onClick("/setting")}
+          label={value === "/setting" ? "Pengaturan" : ""}
+          value="/setting"
           icon={<Settings />}
         />
       </BottomNavigation>

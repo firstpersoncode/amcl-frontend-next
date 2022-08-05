@@ -3,13 +3,13 @@ import {
   AppSessionContextProvider,
   withSessionLogin,
 } from "context/AppSession";
-import ModalLogin from "components/ModalLogin";
+import ModalRegister from "components/ModalRegister";
 
-export default function Login({ session, global }) {
+export default function Register({ session, global }) {
   return (
     <AppSessionContextProvider session={session}>
       <CommonContextProvider context={global}>
-        <ModalLogin />
+        <ModalRegister />
       </CommonContextProvider>
     </AppSessionContextProvider>
   );

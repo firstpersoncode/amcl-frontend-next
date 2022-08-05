@@ -13,6 +13,7 @@ export default function AppLayout({ children }) {
         sx={{
           flexGrow: 1,
           p: 3,
+          paddingBottom: "100px",
         }}
       >
         <Toolbar />

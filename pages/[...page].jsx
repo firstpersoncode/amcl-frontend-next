@@ -1,21 +1,18 @@
 import { CommonContextProvider } from "context/Common";
-import {
-  AppSessionContextProvider,
-  withSessionLogin,
-} from "context/AppSession";
-import ModalLogin from "components/ModalLogin";
+import { AppSessionContextProvider, withSessionAuth } from "context/AppSession";
+import Screen from "components/Screen";
 
-export default function Login({ session, global }) {
+export default function Page({ session, global }) {
   return (
     <AppSessionContextProvider session={session}>
       <CommonContextProvider context={global}>
-        <ModalLogin />
+        <Screen />
       </CommonContextProvider>
     </AppSessionContextProvider>
   );
 }
 
-export const getServerSideProps = withSessionLogin(
+export const getServerSideProps = withSessionAuth(
   async function getServerSideProps(ctx) {
     return {
       props: {

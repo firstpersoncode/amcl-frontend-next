@@ -3,6 +3,9 @@ import AppLayout from "../AppLayout";
 
 const componentPages = {
   "/": require("./Home").default,
+  "/school": require("./School").default,
+  "/participant": require("./Participant").default,
+  "/setting": require("./Setting").default,
 };
 
 export default function Page() {

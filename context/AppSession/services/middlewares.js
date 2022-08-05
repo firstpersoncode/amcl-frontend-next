@@ -5,15 +5,12 @@ export function withSessionAuth(handler) {
   return async (ctx) => {
     try {
       const token = getToken(ctx);
-      const res = await axios.get(
-        process.env.DASHBOARD_URL + "/school/user/me",
-        {
-          headers: {
-            "x-api-key": process.env.DASHBOARD_API_KEY,
-            "x-token": token,
-          },
-        }
-      );
+      const res = await axios.get(process.env.DASHBOARD_URL + "/user/me", {
+        headers: {
+          "x-api-key": process.env.DASHBOARD_API_KEY,
+          "x-token": token,
+        },
+      });
       const user = res?.data.user;
       if (!user) throw new Error("Not logged in");
       ctx.req.user = user;
@@ -42,15 +39,12 @@ export function withSessionLogin(handler) {
   return async (ctx) => {
     try {
       const token = getToken(ctx);
-      const res = await axios.get(
-        process.env.DASHBOARD_URL + "/school/user/me",
-        {
-          headers: {
-            "x-api-key": process.env.DASHBOARD_API_KEY,
-            "x-token": token,
-          },
-        }
-      );
+      const res = await axios.get(process.env.DASHBOARD_URL + "/user/me", {
+        headers: {
+          "x-api-key": process.env.DASHBOARD_API_KEY,
+          "x-token": token,
+        },
+      });
       const user = res?.data.user;
       if (user) throw new Error("Logged in");
     } catch (err) {
@@ -62,6 +56,13 @@ export function withSessionLogin(handler) {
       };
     }
 
-    return handler(ctx);
+    const returnHandler = await handler(ctx);
+
+    return {
+      ...returnHandler,
+      props: {
+        ...returnHandler.props,
+      },
+    };
   };
 }
