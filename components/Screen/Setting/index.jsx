@@ -68,7 +68,6 @@ export default function Setting() {
           sx={{ textTransform: "unset" }}
           variant="extended"
           onClick={onLogout}
-          color="error"
         >
           <Logout sx={{ mr: 1 }} />
           Keluar
