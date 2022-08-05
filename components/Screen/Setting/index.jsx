@@ -25,7 +25,7 @@ export default function Setting() {
   const onGenerateQR = async () => {
     setIsLoading(true);
     try {
-      await axios.get("/api/complete");
+      // await axios.get("/api/complete");
       setMessage("QR Code berhasil dibuat");
       toggleDialogMessage();
     } catch (err) {

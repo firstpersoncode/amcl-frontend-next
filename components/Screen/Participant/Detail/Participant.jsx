@@ -82,21 +82,21 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
     }
 
     setIsLoading(true);
-    try {
-      await axios.post("/api/participants/update", {
-        idString: participant.idString,
-        participant: data,
-      });
+    // try {
+    //   await axios.post("/api/participants/update", {
+    //     idString: participant.idString,
+    //     participant: data,
+    //   });
 
-      if (avatar) setSubmitAvatar(true);
-    } catch (err) {
-      console.error(err);
-    }
+    //   if (avatar) setSubmitAvatar(true);
+    // } catch (err) {
+    //   console.error(err);
+    // }
 
     setIsLoading(false);
     closeConfirm();
     setIsDirty(false);
-    fetchRows();
+    // fetchRows();
   };
 
   const [openConfirmArchive, setOpenConfirmArchive] = useState(false);
@@ -112,17 +112,17 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
 
   const handleArchive = async () => {
     setIsLoading(true);
-    try {
-      await axios.post("/api/participants/archive", {
-        idString: participant.idString,
-      });
-    } catch (err) {
-      console.error(err);
-    }
+    // try {
+    //   await axios.post("/api/participants/archive", {
+    //     idString: participant.idString,
+    //   });
+    // } catch (err) {
+    //   console.error(err);
+    // }
     setIsLoading(false);
     closeConfirmArchive();
     onClose();
-    fetchRows();
+    // fetchRows();
   };
 
   return (
