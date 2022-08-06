@@ -1,5 +1,10 @@
-import { Card, Dialog, DialogContent } from "@mui/material";
+import { Card, Dialog, DialogContent, Slide } from "@mui/material";
 import useIsMobile from "hooks/useIsMobile";
+import { forwardRef } from "react";
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const componentDetails = {
   official: require("./Official").default,
@@ -20,6 +25,7 @@ export default function Create({ open, type, onClose, fetchRows }) {
       scroll="paper"
       fullWidth
       maxWidth="md"
+      TransitionComponent={Transition}
     >
       <ComponentDetail type={type} onClose={onClose} fetchRows={fetchRows} />
     </Dialog>

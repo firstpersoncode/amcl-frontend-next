@@ -58,7 +58,7 @@ export default function useForm() {
       setIsLoading(true);
       try {
         await axios.post("/api/login", { ...values });
-        replace("/participant");
+        replace("/");
       } catch (err) {
         console.error(err);
         if (err.response?.data) setMessage(err.response.data);
@@ -73,7 +73,7 @@ export default function useForm() {
     setIsLoading(true);
     try {
       await axios.post("/api/login", { ...values, captcha: c });
-      replace("/participant");
+      replace("/");
     } catch (err) {
       console.error(err);
       if (err.response?.data) setMessage(err.response.data);

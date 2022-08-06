@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { Logout, Help, QrCode } from "@mui/icons-material";
 import Loader from "./Loader";
+import { useAppSessionContext } from "context/AppSession";
 
 export default function Setting() {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,11 +51,14 @@ export default function Setting() {
     toggleQRConfirmation();
   };
 
+  const user = useAppSessionContext();
+
   return (
-    <Box>
+    <>
       {isLoading && <Loader />}
 
       <Button
+        disabled={!user.active || user.completed}
         onClick={toggleQRConfirmation}
         fullWidth
         size="large"
@@ -108,6 +112,6 @@ export default function Setting() {
           <Button onClick={onGenerateQR}>Selesai pendaftaran</Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </>
   );
 }

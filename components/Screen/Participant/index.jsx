@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Dialog, DialogContent } from "@mui/material";
+import { Dialog, DialogContent } from "@mui/material";
 import { useAppSessionContext } from "context/AppSession";
 import ListParticipant from "./ListParticipant";
 import ListLoader from "./ListLoader";
+import { useRouter } from "next/router";
 
 export default function Participant() {
   const user = useAppSessionContext();
@@ -60,31 +61,26 @@ export default function Participant() {
     if (!participants.length) fetchRows();
   }, [participants, fetchRows]);
 
-  return (
-    <Box>
-      {isLoading ? (
-        <ListLoader />
-      ) : (
-        <ListParticipant
-          type="participant"
-          fetchRows={fetchRows}
-          participants={participants}
-        />
-      )}
+  const { asPath } = useRouter();
 
-      {isLoading ? (
-        <ListLoader />
-      ) : (
-        <ListParticipant
-          type="official"
-          fetchRows={fetchRows}
-          participants={officials}
-        />
-      )}
+  if (isLoading || asPath !== "/participant") return <ListLoader />;
+  return (
+    <>
+      <ListParticipant
+        type="participant"
+        fetchRows={fetchRows}
+        participants={participants}
+      />
+
+      <ListParticipant
+        type="official"
+        fetchRows={fetchRows}
+        participants={officials}
+      />
 
       <Dialog open={openDialogMessage} onClose={toggleDialogMessage}>
         <DialogContent>{message}</DialogContent>
       </Dialog>
-    </Box>
+    </>
   );
 }

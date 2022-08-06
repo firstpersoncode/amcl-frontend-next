@@ -170,168 +170,167 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
           <Close />
         </IconButton>
       </DialogTitle>
-      <form onSubmit={handleSubmit}>
-        <DialogContent dividers>
-          <Grid container spacing={2}>
-            <Grid item sm={7} xs={12}>
-              <TextField
-                required
-                sx={{ mb: 2 }}
-                size="small"
-                fullWidth
-                name="name"
-                label="Nama"
-                variant="standard"
-                value={values.name || ""}
-                onChange={handleChange("name")}
-                helperText={errors.name}
-                InputLabelProps={{ shrink: true }}
+
+      <DialogContent dividers>
+        <Grid container spacing={2}>
+          <Grid item sm={7} xs={12}>
+            <TextField
+              required
+              sx={{ mb: 2 }}
+              size="small"
+              fullWidth
+              name="name"
+              label="Nama"
+              variant="standard"
+              value={values.name || ""}
+              onChange={handleChange("name")}
+              helperText={errors.name}
+              InputLabelProps={{ shrink: true }}
+            />
+
+            <TextField
+              required
+              sx={{ mb: 2 }}
+              size="small"
+              fullWidth
+              name="email"
+              label="Email"
+              variant="standard"
+              value={values.email || ""}
+              onChange={handleChange("email")}
+              error={Boolean(errors.email)}
+              helperText={errors.email}
+              InputLabelProps={{ shrink: true }}
+            />
+
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Tanggal lahir"
+                value={values.dob || ""}
+                inputFormat="dd/MM/yyyy"
+                onChange={(value) => {
+                  handleChange("dob")({ target: { value } });
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    required
+                    sx={{ mb: 2 }}
+                    size="small"
+                    fullWidth
+                    name="dob"
+                    error={Boolean(errors.dob)}
+                    helperText={errors.dob}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                )}
               />
+            </LocalizationProvider>
 
-              <TextField
-                required
-                sx={{ mb: 2 }}
-                size="small"
-                fullWidth
-                name="email"
-                label="Email"
-                variant="standard"
-                value={values.email || ""}
-                onChange={handleChange("email")}
-                error={Boolean(errors.email)}
-                helperText={errors.email}
-                InputLabelProps={{ shrink: true }}
-              />
+            <TextField
+              required
+              sx={{ mb: 2 }}
+              size="small"
+              fullWidth
+              name="phone"
+              label="No. Telephone"
+              variant="standard"
+              value={values.phone || ""}
+              onChange={handleChange("phone")}
+              error={Boolean(errors.phone)}
+              helperText={errors.phone}
+              InputLabelProps={{ shrink: true }}
+            />
 
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  label="Tanggal lahir"
-                  value={values.dob || ""}
-                  inputFormat="dd/MM/yyyy"
-                  onChange={(value) => {
-                    handleChange("dob")({ target: { value } });
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      required
-                      sx={{ mb: 2 }}
-                      size="small"
-                      fullWidth
-                      name="dob"
-                      error={Boolean(errors.dob)}
-                      helperText={errors.dob}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
+            <TextField
+              required
+              sx={{ mb: 2 }}
+              size="small"
+              fullWidth
+              select
+              name="gender"
+              label="Gender"
+              value={values.gender || ""}
+              onChange={handleChange("gender")}
+              error={Boolean(errors.gender)}
+              helperText={errors.gender}
+              InputLabelProps={{ shrink: true }}
+            >
+              <MenuItem value="male">Pria</MenuItem>
+              <MenuItem value="female">Wanita</MenuItem>
+            </TextField>
 
-              <TextField
-                required
-                sx={{ mb: 2 }}
-                size="small"
-                fullWidth
-                name="phone"
-                label="No. Telephone"
-                variant="standard"
-                value={values.phone || ""}
-                onChange={handleChange("phone")}
-                error={Boolean(errors.phone)}
-                helperText={errors.phone}
-                InputLabelProps={{ shrink: true }}
-              />
-
-              <TextField
-                required
-                sx={{ mb: 2 }}
-                size="small"
-                fullWidth
-                select
-                name="gender"
-                label="Gender"
-                value={values.gender || ""}
-                onChange={handleChange("gender")}
-                error={Boolean(errors.gender)}
-                helperText={errors.gender}
-                InputLabelProps={{ shrink: true }}
-              >
-                <MenuItem value="male">Pria</MenuItem>
-                <MenuItem value="female">Wanita</MenuItem>
-              </TextField>
-
-              <TextField
-                required
-                sx={{ mb: 2 }}
-                size="small"
-                fullWidth
-                select
-                name="officialPosition"
-                label="Jabatan"
-                value={values.officialPosition || ""}
-                onChange={handleChange("officialPosition")}
-                error={Boolean(errors.officialPosition)}
-                helperText={errors.officialPosition}
-                InputLabelProps={{ shrink: true }}
-              >
-                <MenuItem value="coach">Pelatih</MenuItem>
-                <MenuItem value="coachAssistant">Asisten Pelatih</MenuItem>
-                <MenuItem value="manager">Manager</MenuItem>
-                <MenuItem value="teacher">Guru</MenuItem>
-              </TextField>
-            </Grid>
-
-            <Grid item sm={5} xs={12}>
-              <Uploader
-                label="Foto Profile"
-                type="avatar"
-                value={fileAvatar}
-                ownerId={participant.id}
-                submit={submitAvatar}
-                onChange={handleChangeAvatar}
-                onUpload={onFinishUploadAvatar}
-              />
-
-              <Uploader
-                label="Foto License"
-                type="license"
-                value={fileLicense}
-                ownerId={participant.id}
-                submit={submitLicense}
-                onChange={handleChangeLicense}
-                onUpload={onFinishUploadLicense}
-              />
-
-              <TextField
-                sx={{ mb: 6 }}
-                size="small"
-                fullWidth
-                name="instagram"
-                label="Instagram"
-                variant="standard"
-                value={values.instagram || ""}
-                onChange={handleChange("instagram")}
-                error={Boolean(errors.instagram)}
-                helperText={errors.instagram}
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
+            <TextField
+              required
+              sx={{ mb: 2 }}
+              size="small"
+              fullWidth
+              select
+              name="officialPosition"
+              label="Jabatan"
+              value={values.officialPosition || ""}
+              onChange={handleChange("officialPosition")}
+              error={Boolean(errors.officialPosition)}
+              helperText={errors.officialPosition}
+              InputLabelProps={{ shrink: true }}
+            >
+              <MenuItem value="coach">Pelatih</MenuItem>
+              <MenuItem value="coachAssistant">Asisten Pelatih</MenuItem>
+              <MenuItem value="manager">Manager</MenuItem>
+              <MenuItem value="teacher">Guru</MenuItem>
+            </TextField>
           </Grid>
-        </DialogContent>
 
-        <DialogActions>
-          <Button disabled={isLoading} onClick={handleSubmitArchive}>
-            Hapus
-          </Button>
-          <Button
-            type="submit"
-            disabled={isLoading || !isDirty}
-            onClick={handleSubmit}
-          >
-            Simpan
-          </Button>
-        </DialogActions>
-      </form>
+          <Grid item sm={5} xs={12}>
+            <Uploader
+              label="Foto Profile"
+              type="avatar"
+              value={fileAvatar}
+              ownerId={participant.id}
+              submit={submitAvatar}
+              onChange={handleChangeAvatar}
+              onUpload={onFinishUploadAvatar}
+            />
+
+            <Uploader
+              label="Foto License"
+              type="license"
+              value={fileLicense}
+              ownerId={participant.id}
+              submit={submitLicense}
+              onChange={handleChangeLicense}
+              onUpload={onFinishUploadLicense}
+            />
+
+            <TextField
+              sx={{ mb: 6 }}
+              size="small"
+              fullWidth
+              name="instagram"
+              label="Instagram"
+              variant="standard"
+              value={values.instagram || ""}
+              onChange={handleChange("instagram")}
+              error={Boolean(errors.instagram)}
+              helperText={errors.instagram}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+
+      <DialogActions>
+        <Button disabled={isLoading} onClick={handleSubmitArchive}>
+          Hapus
+        </Button>
+        <Button
+          type="submit"
+          disabled={isLoading || !isDirty}
+          onClick={handleSubmit}
+        >
+          Simpan
+        </Button>
+      </DialogActions>
 
       <Dialog open={openConfirmArchive} onClose={closeConfirmArchive}>
         <DialogContent>

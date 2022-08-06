@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Paper, BottomNavigation, BottomNavigationAction } from "@mui/material";
-import { LabelImportant, Group, Settings } from "@mui/icons-material";
+import { Group, Settings, Home } from "@mui/icons-material";
 
 export default function Navigation() {
   const { push, asPath } = useRouter();
@@ -24,11 +24,12 @@ export default function Navigation() {
         }}
       >
         <BottomNavigationAction
-          onClick={onClick("/school")}
-          label={value === "/school" ? "Sekolah" : ""}
-          value="/school"
-          icon={<LabelImportant />}
+          onClick={onClick("/")}
+          label={value === "/" ? "Home" : ""}
+          value="/"
+          icon={<Home />}
         />
+
         <BottomNavigationAction
           onClick={onClick("/participant")}
           label={value === "/participant" ? "Peserta" : ""}
