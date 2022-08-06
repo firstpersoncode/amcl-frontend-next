@@ -32,6 +32,12 @@ export default function ListParticipant({ type, participants, fetchRows }) {
     toggleDetail();
   };
 
+  const maxPlayer =
+    type === "official"
+      ? user.category === "univ"
+        ? participants.length >= 2
+        : participants.length >= 3
+      : participants.length >= 14;
   return (
     <>
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -67,13 +73,7 @@ export default function ListParticipant({ type, participants, fetchRows }) {
 
       <Button
         onClick={toggleCreate}
-        disabled={
-          !user.active || user.completed || type === "official"
-            ? user.category === "univ"
-              ? participants.length >= 2
-              : participants.length >= 3
-            : participants.length >= 14
-        }
+        disabled={maxPlayer || !user.active || user.completed}
         fullWidth
         size="large"
         variant="contained"

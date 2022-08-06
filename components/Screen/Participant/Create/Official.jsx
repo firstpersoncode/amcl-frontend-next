@@ -18,7 +18,7 @@ import axios from "axios";
 import Uploader from "components/Uploader";
 import Loader from "../Loader";
 
-export default function Official({ onClose, fetchRows }) {
+export default function Official({ type, onClose, fetchRows }) {
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
@@ -71,6 +71,7 @@ export default function Official({ onClose, fetchRows }) {
       const res = await axios.post("/api/participants/create", {
         participant: {
           ...values,
+          type,
           active: true,
           archived: false,
         },

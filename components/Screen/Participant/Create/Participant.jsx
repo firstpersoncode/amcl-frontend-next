@@ -20,7 +20,7 @@ import Uploader from "components/Uploader";
 import Loader from "../Loader";
 import { useAppSessionContext } from "context/AppSession";
 
-export default function Participant({ onClose, fetchRows }) {
+export default function Participant({ type, onClose, fetchRows }) {
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
@@ -66,6 +66,7 @@ export default function Participant({ onClose, fetchRows }) {
       const res = await axios.post("/api/participants/create", {
         participant: {
           ...values,
+          type,
           active: true,
           archived: false,
         },

@@ -6,7 +6,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const componentDetails = {
+const componentCreates = {
   official: require("./Official").default,
   participant: require("./Participant").default,
 };
@@ -14,8 +14,8 @@ const componentDetails = {
 export default function Create({ open, type, onClose, fetchRows }) {
   const isMobile = useIsMobile();
 
-  const ComponentDetail = componentDetails[type];
-  if (!ComponentDetail) return null;
+  const ComponentCreate = componentCreates[type];
+  if (!ComponentCreate) return null;
 
   return (
     <Dialog
@@ -27,7 +27,7 @@ export default function Create({ open, type, onClose, fetchRows }) {
       maxWidth="md"
       TransitionComponent={Transition}
     >
-      <ComponentDetail type={type} onClose={onClose} fetchRows={fetchRows} />
+      <ComponentCreate type={type} onClose={onClose} fetchRows={fetchRows} />
     </Dialog>
   );
 }
