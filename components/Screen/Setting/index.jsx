@@ -108,8 +108,15 @@ export default function Setting() {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={toggleQRConfirmation}>Batal</Button>
-          <Button onClick={onGenerateQR}>Selesai pendaftaran</Button>
+          <Button
+            sx={{ textTransform: "unset" }}
+            onClick={toggleQRConfirmation}
+          >
+            Batal
+          </Button>
+          <Button sx={{ textTransform: "unset" }} onClick={onGenerateQR}>
+            Selesai pendaftaran
+          </Button>
         </DialogActions>
       </Dialog>
     </>
