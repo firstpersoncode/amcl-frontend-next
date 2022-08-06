@@ -309,7 +309,7 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
             <Uploader
               label="Foto Profile"
               type="avatar"
-              value={fileAvatar}
+              value={avatar || fileAvatar}
               ownerId={participant.id}
               submit={submitAvatar}
               onChange={handleChangeAvatar}

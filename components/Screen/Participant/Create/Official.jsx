@@ -39,9 +39,6 @@ export default function Official({ onClose, fetchRows }) {
     setOpenConfirm(false);
   };
 
-  const fileAvatar =
-    values.files?.length && values.files.find((file) => file.type === "avatar");
-
   const [avatar, setAvatar] = useState();
   const [submitAvatar, setSubmitAvatar] = useState(false);
 
