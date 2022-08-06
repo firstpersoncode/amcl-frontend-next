@@ -36,12 +36,16 @@ export default function Setting() {
     replace("/login");
   };
 
+  const user = useAppSessionContext();
+  const [generated, setGenerated] = useState(user.completed);
+
   const onGenerateQR = async () => {
     setIsLoading(true);
     try {
       await axios.get("/api/complete");
       setMessage("QR Code berhasil dibuat");
       toggleDialogMessage();
+      setGenerated(true);
     } catch (err) {
       if (err.response?.data) {
         setMessage(err.response.data);
@@ -51,8 +55,6 @@ export default function Setting() {
     setIsLoading(false);
     toggleQRConfirmation();
   };
-
-  const user = useAppSessionContext();
 
   const [openHelp, setOpenHelp] = useState(false);
   const toggleHelp = () => {
@@ -64,7 +66,7 @@ export default function Setting() {
       {isLoading && <Loader />}
 
       <Button
-        disabled={!user.active || user.completed}
+        disabled={generated || !user.active || user.completed}
         onClick={toggleQRConfirmation}
         fullWidth
         size="large"
