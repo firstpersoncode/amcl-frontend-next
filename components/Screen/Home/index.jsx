@@ -26,11 +26,18 @@ export default function Home() {
           <Box>
             <Typography sx={{ mb: 2 }}>
               Status akun:{" "}
-              {user.active ? (
+              {user.completed ? (
+                <Chip
+                  size="small"
+                  label="Completed"
+                  color="success"
+                  variant="outlined"
+                />
+              ) : user.active ? (
                 <Chip
                   size="small"
                   label="Aktif"
-                  color="success"
+                  color="secondary"
                   variant="outlined"
                 />
               ) : (
@@ -43,7 +50,13 @@ export default function Home() {
               )}
             </Typography>
 
-            {user.active ? (
+            {user.completed ? (
+              <Typography variant="body2">
+                Pendaftaran telah selesai, dan QR Code telah dibagikan.
+                <br />
+                Selamat berjuang!
+              </Typography>
+            ) : user.active ? (
               <Typography variant="body2">
                 Saat ini Anda sudah dapat melengkapi{" "}
                 <Link href="/participant" passHref>
@@ -92,30 +105,32 @@ export default function Home() {
         )}
       </Card>
 
-      <Card elevation={0} sx={{ my: 2, backgroundColor: "#eee" }}>
-        <CardContent sx={{ display: "flex" }}>
-          <InfoOutlined color="secondary" sx={{ mr: 2 }} />
-          <Typography variant="body2">
-            Jika Anda telah selesai mengisi data peserta Anda, segera aktifkan
-            QR Code untuk semua peserta dengan pergi ke menu{" "}
-            <Link href="/setting" passHref>
-              <a>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    display: "inline",
-                    color: (theme) => theme.palette.secondary.main,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Setting
-                </Typography>
-              </a>
-            </Link>
-            , lalu klik tombol {`"Generate QR Code"`}.
-          </Typography>
-        </CardContent>
-      </Card>
+      {!user.completed && user.active && (
+        <Card elevation={0} sx={{ my: 2, backgroundColor: "#eee" }}>
+          <CardContent sx={{ display: "flex" }}>
+            <InfoOutlined color="secondary" sx={{ mr: 2 }} />
+            <Typography variant="body2">
+              Jika Anda telah selesai mengisi data peserta Anda, segera aktifkan
+              QR Code untuk semua peserta dengan pergi ke menu{" "}
+              <Link href="/setting" passHref>
+                <a>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      display: "inline",
+                      color: (theme) => theme.palette.secondary.main,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Setting
+                  </Typography>
+                </a>
+              </Link>
+              , lalu klik tombol {`"Generate QR Code"`}.
+            </Typography>
+          </CardContent>
+        </Card>
+      )}
 
       <News />
     </>
