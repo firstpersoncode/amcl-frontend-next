@@ -13,6 +13,7 @@ import {
 import { Logout, Help, QrCode } from "@mui/icons-material";
 import Loader from "./Loader";
 import { useAppSessionContext } from "context/AppSession";
+import HelpPanel from "./HelpPanel";
 
 export default function Setting() {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +54,11 @@ export default function Setting() {
 
   const user = useAppSessionContext();
 
+  const [openHelp, setOpenHelp] = useState(false);
+  const toggleHelp = () => {
+    setOpenHelp(!openHelp);
+  };
+
   return (
     <>
       {isLoading && <Loader />}
@@ -71,9 +77,11 @@ export default function Setting() {
       </Button>
 
       <Button
+        onClick={toggleHelp}
         fullWidth
         size="large"
         variant="contained"
+        color="secondary"
         sx={{ textTransform: "unset", mb: 2 }}
       >
         <Help sx={{ mr: 1 }} />
@@ -91,8 +99,10 @@ export default function Setting() {
         </Fab>
       </Box>
 
-      <Dialog open={openDialogMessage} onClose={toggleDialogMessage}>
-        <DialogContent>{message}</DialogContent>
+      <Dialog open={openHelp} onClose={toggleHelp}>
+        <DialogContent>
+          <HelpPanel />
+        </DialogContent>
       </Dialog>
 
       <Dialog open={openQRConfirmation} onClose={toggleQRConfirmation}>
@@ -118,6 +128,10 @@ export default function Setting() {
             Selesai pendaftaran
           </Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDialogMessage} onClose={toggleDialogMessage}>
+        <DialogContent>{message}</DialogContent>
       </Dialog>
     </>
   );
