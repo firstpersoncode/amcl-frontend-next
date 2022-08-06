@@ -40,26 +40,30 @@ export default function Official({ onClose, fetchRows }) {
   };
 
   const [avatar, setAvatar] = useState();
-  const [submitAvatar, setSubmitAvatar] = useState(false);
-
   const handleChangeAvatar = ({ image }) => {
     setAvatar(image);
   };
 
-  const onFinishUploadAvatar = useCallback(() => {
-    setSubmitAvatar(false);
-  }, []);
+  const uploadAvatarToServer = (ownerId) => {
+    const body = new FormData();
+    body.append("file", avatar);
+    body.append("type", "avatar");
+    body.append("ownerId", ownerId);
+    return axios.post("/api/participants/upload", body);
+  };
 
   const [license, setLicense] = useState();
-  const [submitLicense, setSubmitLicense] = useState(false);
-
   const handleChangeLicense = ({ image }) => {
     setLicense(image);
   };
 
-  const onFinishUploadLicense = useCallback(() => {
-    setSubmitLicense(false);
-  }, []);
+  const uploadLicenseToServer = (ownerId) => {
+    const body = new FormData();
+    body.append("file", license);
+    body.append("type", "license");
+    body.append("ownerId", ownerId);
+    return axios.post("/api/participants/upload", body);
+  };
 
   const handleCreate = async () => {
     setIsLoading(true);
@@ -73,12 +77,15 @@ export default function Official({ onClose, fetchRows }) {
       });
 
       if (res.data?.id) {
-        setValues((v) => ({ ...v, id: res.data.id }));
-        if (avatar) setSubmitAvatar(true);
-        if (license) setSubmitLicense(true);
+        if (avatar) await uploadAvatarToServer(res.data.id);
+        if (license) await uploadLicenseToServer(res.data.id);
       }
     } catch (err) {
-      console.error(err);
+      // if (err.response?.data) {
+      //   setMessage(err.response.data);
+      //   setOpenDialogMessage(true);
+      // }
+      console.error(err.response?.data || err);
     }
     setIsLoading(false);
     closeConfirm();
@@ -214,20 +221,14 @@ export default function Official({ onClose, fetchRows }) {
               label="Foto Profile"
               type="avatar"
               value={avatar}
-              ownerId={values.id}
-              submit={submitAvatar}
               onChange={handleChangeAvatar}
-              onUpload={onFinishUploadAvatar}
             />
 
             <Uploader
               label="Foto License"
               type="license"
               value={license}
-              ownerId={values.id}
-              submit={submitLicense}
               onChange={handleChangeLicense}
-              onUpload={onFinishUploadLicense}
             />
 
             <TextField

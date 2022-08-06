@@ -63,16 +63,17 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
     values.files?.length && values.files.find((file) => file.type === "avatar");
 
   const [avatar, setAvatar] = useState();
-  const [submitAvatar, setSubmitAvatar] = useState(false);
-
   const handleChangeAvatar = ({ image }) => {
     setAvatar(image);
     setIsDirty(true);
   };
-
-  const onFinishUploadAvatar = useCallback(() => {
-    setSubmitAvatar(false);
-  }, []);
+  const uploadAvatarToServer = (ownerId) => {
+    const body = new FormData();
+    body.append("file", avatar);
+    body.append("type", "avatar");
+    body.append("ownerId", ownerId);
+    return axios.post("/api/participants/upload", body);
+  };
 
   const handleUpdate = async () => {
     const data = {};
@@ -89,9 +90,13 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
         participant: { ...data, avatar: undefined },
       });
 
-      if (avatar) setSubmitAvatar(true);
+      if (avatar) await uploadAvatarToServer(participant.id);
     } catch (err) {
-      console.error(err);
+      // if (err.response?.data) {
+      //   setMessage(err.response.data);
+      //   setOpenDialogMessage(true);
+      // }
+      console.error(err.response?.data || err);
     }
 
     setIsLoading(false);
@@ -119,7 +124,11 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
         idString: participant.idString,
       });
     } catch (err) {
-      console.error(err);
+      // if (err.response?.data) {
+      //   setMessage(err.response.data);
+      //   setOpenDialogMessage(true);
+      // }
+      console.error(err.response?.data || err);
     }
     setIsLoading(false);
     closeConfirmArchive();
@@ -310,10 +319,7 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
               label="Foto Profile"
               type="avatar"
               value={avatar || fileAvatar}
-              ownerId={participant.id}
-              submit={submitAvatar}
               onChange={handleChangeAvatar}
-              onUpload={onFinishUploadAvatar}
             />
 
             <TextField

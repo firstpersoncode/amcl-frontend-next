@@ -47,15 +47,18 @@ export default function Participant({ onClose, fetchRows }) {
   const isUniv = user.category === "univ";
 
   const [avatar, setAvatar] = useState();
-  const [submitAvatar, setSubmitAvatar] = useState(false);
 
   const handleChangeAvatar = ({ image }) => {
     setAvatar(image);
   };
 
-  const onFinishUploadAvatar = useCallback(() => {
-    setSubmitAvatar(false);
-  }, []);
+  const uploadAvatarToServer = (ownerId) => {
+    const body = new FormData();
+    body.append("file", avatar);
+    body.append("type", "avatar");
+    body.append("ownerId", ownerId);
+    return axios.post("/api/participants/upload", body);
+  };
 
   const handleCreate = async () => {
     setIsLoading(true);
@@ -68,12 +71,13 @@ export default function Participant({ onClose, fetchRows }) {
         },
       });
 
-      if (res.data?.id) {
-        setValues((v) => ({ ...v, id: res.data.id }));
-        if (avatar) setSubmitAvatar(true);
-      }
+      if (res.data?.id && avatar) await uploadAvatarToServer(res.data.id);
     } catch (err) {
-      console.error(err);
+      // if (err.response?.data) {
+      //   setMessage(err.response.data);
+      //   setOpenDialogMessage(true);
+      // }
+      console.error(err.response?.data || err);
     }
     setIsLoading(false);
     closeConfirm();
@@ -242,10 +246,7 @@ export default function Participant({ onClose, fetchRows }) {
               label="Foto Profile"
               type="avatar"
               value={avatar}
-              ownerId={values.id}
-              submit={submitAvatar}
               onChange={handleChangeAvatar}
-              onUpload={onFinishUploadAvatar}
             />
 
             <TextField

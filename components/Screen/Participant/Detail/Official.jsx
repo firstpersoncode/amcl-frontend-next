@@ -58,32 +58,34 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     values.files?.length && values.files.find((file) => file.type === "avatar");
 
   const [avatar, setAvatar] = useState();
-  const [submitAvatar, setSubmitAvatar] = useState(false);
-
   const handleChangeAvatar = ({ image }) => {
     setAvatar(image);
     setIsDirty(true);
   };
-
-  const onFinishUploadAvatar = useCallback(() => {
-    setSubmitAvatar(false);
-  }, []);
+  const uploadAvatarToServer = (ownerId) => {
+    const body = new FormData();
+    body.append("file", avatar);
+    body.append("type", "avatar");
+    body.append("ownerId", ownerId);
+    return axios.post("/api/participants/upload", body);
+  };
 
   const fileLicense =
     values.files?.length &&
     values.files.find((file) => file.type === "license");
 
   const [license, setLicense] = useState();
-  const [submitLicense, setSubmitLicense] = useState(false);
-
   const handleChangeLicense = ({ image }) => {
     setLicense(image);
     setIsDirty(true);
   };
-
-  const onFinishUploadLicense = useCallback(() => {
-    setSubmitLicense(false);
-  }, []);
+  const uploadLicenseToServer = (ownerId) => {
+    const body = new FormData();
+    body.append("file", license);
+    body.append("type", "license");
+    body.append("ownerId", ownerId);
+    return axios.post("/api/participants/upload", body);
+  };
 
   const handleUpdate = async () => {
     const data = {};
@@ -100,10 +102,14 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
         participant: { ...data, avatar: undefined },
       });
 
-      if (avatar) setSubmitAvatar(true);
-      if (license) setSubmitLicense(true);
+      if (avatar) await uploadAvatarToServer(participant.id);
+      if (license) await uploadLicenseToServer(participant.id);
     } catch (err) {
-      console.error(err);
+      // if (err.response?.data) {
+      //   setMessage(err.response.data);
+      //   setOpenDialogMessage(true);
+      // }
+      console.error(err.response?.data || err);
     }
 
     setIsLoading(false);
@@ -286,20 +292,14 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
               label="Foto Profile"
               type="avatar"
               value={avatar || fileAvatar}
-              ownerId={participant.id}
-              submit={submitAvatar}
               onChange={handleChangeAvatar}
-              onUpload={onFinishUploadAvatar}
             />
 
             <Uploader
               label="Foto License"
               type="license"
               value={license || fileLicense}
-              ownerId={participant.id}
-              submit={submitLicense}
               onChange={handleChangeLicense}
-              onUpload={onFinishUploadLicense}
             />
 
             <TextField
