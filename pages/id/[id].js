@@ -1,7 +1,7 @@
 import PublicInfo from "components/PublicInfo";
 import axios from "axios";
 
-export default function Ticket({ participant }) {
+export default function ID({ participant }) {
   return <PublicInfo participant={participant} />;
 }
 
@@ -10,7 +10,7 @@ export async function getServerSideProps(ctx) {
   let participant = {};
   try {
     const resp = await axios.get(
-      process.env.DASHBOARD_URL + "/user/ticket?id=" + params.id,
+      process.env.DASHBOARD_URL + "/user/participants/id?id=" + params.id,
       {
         headers: {
           "x-api-key": process.env.DASHBOARD_API_KEY,

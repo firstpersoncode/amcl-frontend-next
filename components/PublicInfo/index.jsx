@@ -81,6 +81,7 @@ export default function PublicInfo({ participant }) {
             <Typography variant="h5">{participant.name}</Typography>
             <Typography>{participant.email}</Typography>
             <Fab
+              disabled={!participant.qrcode?.idString}
               onClick={toggleQRCode}
               size="large"
               sx={{ my: 2 }}
@@ -114,8 +115,15 @@ export default function PublicInfo({ participant }) {
       </Dialog>
 
       <Dialog open={openQRCode} onClose={toggleQRCode}>
-        <DialogContent sx={{ backgroundColor: "#FFF" }}>
-          <QRCodeSVG value={participant.qrcode?.idString} />
+        <DialogContent sx={{ backgroundColor: "#FFF", textAlign: "center" }}>
+          <QRCodeSVG
+            height={250}
+            width={250}
+            value={participant.qrcode?.idString}
+          />
+          <Typography sx={{ mt: 2, fontSize: "12px" }}>
+            {participant.qrcode?.idString}
+          </Typography>
         </DialogContent>
       </Dialog>
     </Box>

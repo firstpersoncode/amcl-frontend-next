@@ -12,6 +12,6 @@ export default async function complete(req, res) {
 
     res.status(201).send();
   } catch (err) {
-    return res.status(500).send(err.response?.data || err);
+    return res.status(500).send(err.response?.data || err.toString());
   }
 }

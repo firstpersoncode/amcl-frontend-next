@@ -1,13 +1,10 @@
 import { CommonContextProvider } from "context/Common";
-import {
-  AppSessionContextProvider,
-  withSessionLogin,
-} from "context/AppSession";
+import { AppSessionContextProvider, withSession } from "context/AppSession";
 import ModalLogin from "components/ModalLogin";
 
-export default function Login({ session, global }) {
+export default function Login({ user, global }) {
   return (
-    <AppSessionContextProvider session={session}>
+    <AppSessionContextProvider context={user}>
       <CommonContextProvider context={global}>
         <ModalLogin />
       </CommonContextProvider>
@@ -15,12 +12,21 @@ export default function Login({ session, global }) {
   );
 }
 
-export const getServerSideProps = withSessionLogin(
-  async function getServerSideProps(ctx) {
+export const getServerSideProps = withSession(async function getServerSideProps(
+  ctx
+) {
+  if (ctx.req.user) {
     return {
-      props: {
-        global: { page: {}, ua: ctx.req.headers["user-agent"] },
+      redirect: {
+        permanent: false,
+        destination: "/",
       },
     };
   }
-);
+
+  return {
+    props: {
+      global: { page: {}, ua: ctx.req.headers["user-agent"] },
+    },
+  };
+});

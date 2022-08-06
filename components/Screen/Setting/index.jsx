@@ -1,7 +1,15 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { Box, Button, Dialog, DialogContent, Fab } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Fab,
+  Typography,
+} from "@mui/material";
 import { Logout, Help, QrCode } from "@mui/icons-material";
 import Loader from "./Loader";
 
@@ -12,6 +20,10 @@ export default function Setting() {
   const [message, setMessage] = useState(false);
   const toggleDialogMessage = () => {
     setOpenDialogMessage(!openDialogMessage);
+  };
+  const [openQRConfirmation, setOpenQRConfirmation] = useState(false);
+  const toggleQRConfirmation = () => {
+    setOpenQRConfirmation(!openQRConfirmation);
   };
 
   const { replace } = useRouter();
@@ -25,7 +37,7 @@ export default function Setting() {
   const onGenerateQR = async () => {
     setIsLoading(true);
     try {
-      // await axios.get("/api/complete");
+      await axios.get("/api/complete");
       setMessage("QR Code berhasil dibuat");
       toggleDialogMessage();
     } catch (err) {
@@ -35,6 +47,7 @@ export default function Setting() {
       }
     }
     setIsLoading(false);
+    toggleQRConfirmation();
   };
 
   return (
@@ -42,7 +55,7 @@ export default function Setting() {
       {isLoading && <Loader />}
 
       <Button
-        onClick={onGenerateQR}
+        onClick={toggleQRConfirmation}
         fullWidth
         size="large"
         variant="contained"
@@ -76,6 +89,24 @@ export default function Setting() {
 
       <Dialog open={openDialogMessage} onClose={toggleDialogMessage}>
         <DialogContent>{message}</DialogContent>
+      </Dialog>
+
+      <Dialog open={openQRConfirmation} onClose={toggleQRConfirmation}>
+        {isLoading && <Loader />}
+        <DialogContent>
+          <Typography>
+            Jika Anda melanjutkan pembuatan QR Code untuk para peserta Anda,
+            maka Anda tidak dapat lagi melakukan pendaftaran peserta. Dengan ini
+            Anda dianggap telah selesai melakukan pendaftaran.
+          </Typography>
+          <Typography sx={{ mt: 2, fontSize: "14px" }}>
+            Apakah Anda yakin ingin menyelesaikan pendaftaran?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={toggleQRConfirmation}>Batal</Button>
+          <Button onClick={onGenerateQR}>Selesai pendaftaran</Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );

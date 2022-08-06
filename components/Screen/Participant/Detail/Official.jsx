@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
+import { Close, Person } from "@mui/icons-material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import axios from "axios";
@@ -54,12 +54,10 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     setOpenConfirm(false);
   };
 
-  const user = useAppSessionContext();
-
   const fileAvatar =
     values.files?.length && values.files.find((file) => file.type === "avatar");
 
-  const [avatar, setAvatar] = useState(fileAvatar);
+  const [avatar, setAvatar] = useState();
   const [submitAvatar, setSubmitAvatar] = useState(false);
 
   const handleChangeAvatar = ({ image }) => {
@@ -75,7 +73,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     values.files?.length &&
     values.files.find((file) => file.type === "license");
 
-  const [license, setLicense] = useState(fileLicense);
+  const [license, setLicense] = useState();
   const [submitLicense, setSubmitLicense] = useState(false);
 
   const handleChangeLicense = ({ image }) => {
@@ -96,22 +94,23 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     }
 
     setIsLoading(true);
-    // try {
-    //   await axios.post("/api/participants/update", {
-    //     idString: participant.idString,
-    //     participant: data,
-    //   });
+    try {
+      await axios.post("/api/participants/update", {
+        idString: participant.idString,
+        participant: { ...data, avatar: undefined },
+      });
 
-    //   if (avatar) setSubmitAvatar(true);
-    //   if (license) setSubmitLicense(true);
-    // } catch (err) {
-    //   console.error(err);
-    // }
+      if (avatar) setSubmitAvatar(true);
+      if (license) setSubmitLicense(true);
+    } catch (err) {
+      console.error(err);
+    }
 
     setIsLoading(false);
     closeConfirm();
     setIsDirty(false);
-    // fetchRows();
+    fetchRows();
+    onClose();
   };
 
   const [openConfirmArchive, setOpenConfirmArchive] = useState(false);
@@ -127,31 +126,38 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
 
   const handleArchive = async () => {
     setIsLoading(true);
-    // try {
-    //   await axios.post("/api/participants/archive", {
-    //     idString: participant.idString,
-    //   });
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    try {
+      await axios.post("/api/participants/archive", {
+        idString: participant.idString,
+      });
+    } catch (err) {
+      console.error(err);
+    }
     setIsLoading(false);
     closeConfirmArchive();
     onClose();
-    // fetchRows();
+    fetchRows();
   };
 
   return (
     <>
       {isLoading && <Loader />}
       <DialogTitle>
-        <Typography>{participant.name}</Typography>
-        <Link passHref href={"/ticket/" + participant.idString} target="_blank">
-          <a>
-            <Button variant="contained" size="small">
-              Card
-            </Button>
-          </a>
-        </Link>
+        <Typography sx={{ mb: 2 }} variant="h6">
+          {participant.name}
+        </Typography>
+        <a
+          href={"/id/" + participant.idString}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Button variant="contained" size="small">
+            <Person sx={{ mr: 1 }} />
+            <Typography sx={{ fontSize: "12px" }}>
+              {participant.idString}
+            </Typography>
+          </Button>
+        </a>
         <IconButton
           onClick={onClose}
           sx={{
@@ -242,6 +248,24 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
                 size="small"
                 fullWidth
                 select
+                name="gender"
+                label="Gender"
+                value={values.gender || ""}
+                onChange={handleChange("gender")}
+                error={Boolean(errors.gender)}
+                helperText={errors.gender}
+                InputLabelProps={{ shrink: true }}
+              >
+                <MenuItem value="male">Pria</MenuItem>
+                <MenuItem value="female">Wanita</MenuItem>
+              </TextField>
+
+              <TextField
+                required
+                sx={{ mb: 2 }}
+                size="small"
+                fullWidth
+                select
                 name="officialPosition"
                 label="Jabatan"
                 value={values.officialPosition || ""}
@@ -254,24 +278,6 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
                 <MenuItem value="coachAssistant">Asisten Pelatih</MenuItem>
                 <MenuItem value="manager">Manager</MenuItem>
                 <MenuItem value="teacher">Guru</MenuItem>
-              </TextField>
-
-              <TextField
-                required
-                sx={{ mb: 2 }}
-                size="small"
-                fullWidth
-                select
-                name="gender"
-                label="Gender"
-                value={values.gender || ""}
-                onChange={handleChange("gender")}
-                error={Boolean(errors.gender)}
-                helperText={errors.gender}
-                InputLabelProps={{ shrink: true }}
-              >
-                <MenuItem value="male">Pria</MenuItem>
-                <MenuItem value="female">Wanita</MenuItem>
               </TextField>
             </Grid>
 

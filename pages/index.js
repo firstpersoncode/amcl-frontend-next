@@ -1,10 +1,10 @@
 import { CommonContextProvider } from "context/Common";
-import { AppSessionContextProvider, withSessionAuth } from "context/AppSession";
+import { AppSessionContextProvider, withSession } from "context/AppSession";
 import Screen from "components/Screen";
 
-export default function Index({ session, global }) {
+export default function Index({ user, global }) {
   return (
-    <AppSessionContextProvider session={session}>
+    <AppSessionContextProvider context={user}>
       <CommonContextProvider context={global}>
         <Screen />
       </CommonContextProvider>
@@ -12,12 +12,21 @@ export default function Index({ session, global }) {
   );
 }
 
-export const getServerSideProps = withSessionAuth(
-  async function getServerSideProps(ctx) {
+export const getServerSideProps = withSession(async function getServerSideProps(
+  ctx
+) {
+  if (!ctx.req.user) {
     return {
-      props: {
-        global: { page: {}, ua: ctx.req.headers["user-agent"] },
+      redirect: {
+        permanent: false,
+        destination: "/login",
       },
     };
   }
-);
+
+  return {
+    props: {
+      global: { page: {}, ua: ctx.req.headers["user-agent"] },
+    },
+  };
+});

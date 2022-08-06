@@ -20,33 +20,20 @@ import Uploader from "components/Uploader";
 import Loader from "../Loader";
 import { useAppSessionContext } from "context/AppSession";
 
-export default function Participant({ onClose, fetchRows, participant = {} }) {
+export default function Participant({ onClose, fetchRows }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [values, setValues] = useState({ ...participant });
+  const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
-  const [isDirty, setIsDirty] = useState(false);
 
   const handleChange = (name) => (e) => {
     setValues((v) => ({ ...v, [name]: e.target.value }));
     setErrors((v) => ({ ...v, [name]: undefined }));
   };
 
-  useEffect(() => {
-    let dirty = false;
-    for (const field in participant) {
-      if (participant[field] !== values[field]) {
-        dirty = true;
-        break;
-      }
-    }
-    setIsDirty(dirty);
-  }, [participant, values]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!isDirty) return;
     setOpenConfirm(true);
   };
 
@@ -59,72 +46,39 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
   const isFutsal = user.branch === "futsal";
   const isUniv = user.category === "univ";
 
-  const fileAvatar =
-    values.files?.length && values.files.find((file) => file.type === "avatar");
-
   const [avatar, setAvatar] = useState();
   const [submitAvatar, setSubmitAvatar] = useState(false);
 
   const handleChangeAvatar = ({ image }) => {
     setAvatar(image);
-    setIsDirty(true);
   };
 
   const onFinishUploadAvatar = useCallback(() => {
     setSubmitAvatar(false);
   }, []);
 
-  const handleUpdate = async () => {
-    const data = {};
-    for (const field in participant) {
-      if (participant[field] !== values[field]) {
-        data[field] = values[field];
-      }
-    }
-
+  const handleCreate = async () => {
     setIsLoading(true);
     try {
-      await axios.post("/api/participants/update", {
-        idString: participant.idString,
-        participant: { ...data, avatar: undefined },
+      const res = await axios.post("/api/participants/create", {
+        participant: {
+          ...values,
+          active: true,
+          archived: false,
+        },
       });
 
-      if (avatar) setSubmitAvatar(true);
+      if (res.data?.id) {
+        setValues((v) => ({ ...v, id: res.data.id }));
+        if (avatar) setSubmitAvatar(true);
+      }
     } catch (err) {
       console.error(err);
     }
-
     setIsLoading(false);
     closeConfirm();
-    setIsDirty(false);
     fetchRows();
     onClose();
-  };
-
-  const [openConfirmArchive, setOpenConfirmArchive] = useState(false);
-
-  const handleSubmitArchive = (e) => {
-    e.preventDefault();
-    setOpenConfirmArchive(true);
-  };
-
-  const closeConfirmArchive = () => {
-    setOpenConfirmArchive(false);
-  };
-
-  const handleArchive = async () => {
-    setIsLoading(true);
-    try {
-      await axios.post("/api/participants/archive", {
-        idString: participant.idString,
-      });
-    } catch (err) {
-      console.error(err);
-    }
-    setIsLoading(false);
-    closeConfirmArchive();
-    onClose();
-    fetchRows();
   };
 
   return (
@@ -133,21 +87,8 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
 
       <DialogTitle>
         <Typography sx={{ mb: 2 }} variant="h6">
-          {participant.name}
+          Peserta
         </Typography>
-        <a
-          href={"/id/" + participant.idString}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Button variant="contained" size="small">
-            <Person sx={{ mr: 1 }} />
-            <Typography sx={{ fontSize: "12px" }}>
-              {participant.idString}
-            </Typography>
-          </Button>
-        </a>
-
         <IconButton
           onClick={onClose}
           sx={{
@@ -175,7 +116,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                 value={values.name || ""}
                 onChange={handleChange("name")}
                 helperText={errors.name}
-                InputLabelProps={{ shrink: true }}
               />
 
               <TextField
@@ -190,7 +130,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                 onChange={handleChange("email")}
                 error={Boolean(errors.email)}
                 helperText={errors.email}
-                InputLabelProps={{ shrink: true }}
               />
 
               <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -211,7 +150,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                       name="dob"
                       error={Boolean(errors.dob)}
                       helperText={errors.dob}
-                      InputLabelProps={{ shrink: true }}
                     />
                   )}
                 />
@@ -229,7 +167,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                 onChange={handleChange("studentId")}
                 error={Boolean(errors.studentId)}
                 helperText={errors.studentId}
-                InputLabelProps={{ shrink: true }}
               />
 
               {!isUniv && (
@@ -245,7 +182,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                   onChange={handleChange("class")}
                   error={Boolean(errors.class)}
                   helperText={errors.class}
-                  InputLabelProps={{ shrink: true }}
                 />
               )}
 
@@ -261,7 +197,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                 onChange={handleChange("phone")}
                 error={Boolean(errors.phone)}
                 helperText={errors.phone}
-                InputLabelProps={{ shrink: true }}
               />
 
               <TextField
@@ -276,7 +211,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                 onChange={handleChange("gender")}
                 error={Boolean(errors.gender)}
                 helperText={errors.gender}
-                InputLabelProps={{ shrink: true }}
               >
                 <MenuItem value="male">Pria</MenuItem>
                 <MenuItem value="female">Wanita</MenuItem>
@@ -295,7 +229,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                   onChange={handleChange("futsalPosition")}
                   error={Boolean(errors.futsalPosition)}
                   helperText={errors.futsalPosition}
-                  InputLabelProps={{ shrink: true }}
                 >
                   <MenuItem value="goal">Penjaga Gawang</MenuItem>
                   <MenuItem value="back">Pertahanan</MenuItem>
@@ -309,8 +242,8 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
               <Uploader
                 label="Foto Profile"
                 type="avatar"
-                value={fileAvatar}
-                ownerId={participant.id}
+                value={avatar}
+                ownerId={values.id}
                 submit={submitAvatar}
                 onChange={handleChangeAvatar}
                 onUpload={onFinishUploadAvatar}
@@ -327,43 +260,25 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
                 onChange={handleChange("instagram")}
                 error={Boolean(errors.instagram)}
                 helperText={errors.instagram}
-                InputLabelProps={{ shrink: true }}
               />
             </Grid>
           </Grid>
         </DialogContent>
 
         <DialogActions>
-          <Button disabled={isLoading} onClick={handleSubmitArchive}>
-            Hapus
-          </Button>
-          <Button
-            type="submit"
-            disabled={isLoading || !isDirty}
-            onClick={handleSubmit}
-          >
+          <Button type="submit" disabled={isLoading} onClick={handleSubmit}>
             Simpan
           </Button>
         </DialogActions>
       </form>
 
-      <Dialog open={openConfirmArchive} onClose={closeConfirmArchive}>
-        <DialogContent>
-          Apakah Anda yakin ingin menghapus data ini?
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeConfirmArchive}>Batal</Button>
-          <Button onClick={handleArchive}>Hapus</Button>
-        </DialogActions>
-      </Dialog>
-
       <Dialog open={openConfirm} onClose={closeConfirm}>
         <DialogContent>
-          Apakah Anda yakin ingin menyimpan perubahan?
+          Apakah Anda yakin ingin membuat peserta baru?
         </DialogContent>
         <DialogActions>
           <Button onClick={closeConfirm}>Batal</Button>
-          <Button onClick={handleUpdate}>Simpan</Button>
+          <Button onClick={handleCreate}>Simpan</Button>
         </DialogActions>
       </Dialog>
     </>

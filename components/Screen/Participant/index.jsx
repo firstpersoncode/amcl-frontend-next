@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Button, Dialog, DialogContent } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Box, Dialog, DialogContent } from "@mui/material";
 import { useAppSessionContext } from "context/AppSession";
 import ListParticipant from "./ListParticipant";
 import ListLoader from "./ListLoader";
@@ -63,42 +62,25 @@ export default function Participant() {
 
   return (
     <Box>
-      <ListParticipant
-        type="participant"
-        fetchRows={fetchRows}
-        participants={participants}
-      />
-      {isLoading && <ListLoader />}
-      <Button
-        disabled={!user.active || user.completed || participants.length >= 14}
-        fullWidth
-        size="large"
-        variant="contained"
-        sx={{ textTransform: "unset" }}
-      >
-        <Add sx={{ mr: 1 }} />
-        Tambah Peserta
-      </Button>
-      <ListParticipant
-        type="official"
-        fetchRows={fetchRows}
-        participants={officials}
-      />
-      {isLoading && <ListLoader />}
-      <Button
-        disabled={
-          !user.active || user.completed || user.category === "univ"
-            ? officials.length >= 2
-            : officials.length >= 3
-        }
-        fullWidth
-        size="large"
-        variant="contained"
-        sx={{ textTransform: "unset" }}
-      >
-        <Add sx={{ mr: 1 }} />
-        Tambah Official
-      </Button>
+      {isLoading ? (
+        <ListLoader />
+      ) : (
+        <ListParticipant
+          type="participant"
+          fetchRows={fetchRows}
+          participants={participants}
+        />
+      )}
+
+      {isLoading ? (
+        <ListLoader />
+      ) : (
+        <ListParticipant
+          type="official"
+          fetchRows={fetchRows}
+          participants={officials}
+        />
+      )}
 
       <Dialog open={openDialogMessage} onClose={toggleDialogMessage}>
         <DialogContent>{message}</DialogContent>

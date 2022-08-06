@@ -42,12 +42,13 @@ export default function Uploader({
 
   const uploadToServer = useCallback(async () => {
     setIsLoading(true);
+    console.log(ownerId);
     try {
       const body = new FormData();
       body.append("file", image);
       body.append("type", type);
       body.append("ownerId", ownerId);
-      await axios.post("/api/upload", body);
+      await axios.post("/api/participants/upload", body);
       setSaved(true);
     } catch (err) {
       if (err.response?.data) setMessage(err.response.data);
@@ -74,7 +75,7 @@ export default function Uploader({
     <>
       <Typography sx={{ mb: 1 }}>{label}</Typography>
 
-      <Card sx={{ maxWidth: 345, mb: 2 }}>
+      <Card sx={{ mb: 2 }}>
         {createObjectURL || value?.url ? (
           <CardActionArea component="label">
             <CardMedia

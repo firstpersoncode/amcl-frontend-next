@@ -52,6 +52,6 @@ export default async function register(req, res) {
 
     res.status(200).send("Berhasil terdaftar");
   } catch (err) {
-    return res.status(500).send(err.response?.data || err);
+    return res.status(500).send(err.response?.data || err.toString());
   }
 }

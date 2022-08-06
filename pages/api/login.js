@@ -51,6 +51,6 @@ export default async function login(req, res) {
 
     res.status(200).send("Berhasil login");
   } catch (err) {
-    return res.status(500).send(err.response?.data || err);
+    return res.status(500).send(err.response?.data || err.toString());
   }
 }

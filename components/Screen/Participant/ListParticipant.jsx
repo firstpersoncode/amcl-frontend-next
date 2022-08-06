@@ -1,18 +1,29 @@
 import { useState } from "react";
 import {
   Avatar,
+  Button,
   List,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
   Typography,
 } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import { useAppSessionContext } from "context/AppSession";
 import Detail from "./Detail";
+import Create from "./Create";
 
 export default function ListParticipant({ type, participants, fetchRows }) {
-  const [open, setOpen] = useState(false);
+  const user = useAppSessionContext();
+
+  const [openDetail, setOpenDetail] = useState(false);
   const toggleDetail = () => {
-    setOpen(!open);
+    setOpenDetail(!openDetail);
+  };
+
+  const [openCreate, setOpenCreate] = useState(false);
+  const toggleCreate = () => {
+    setOpenCreate(!openCreate);
   };
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
@@ -29,7 +40,6 @@ export default function ListParticipant({ type, participants, fetchRows }) {
             key={`item-${i}`}
             alignItems="flex-start"
             onClick={onClickParticipant(i)}
-            sx={{ borderBottom: "1px solid rgba(0,0,0,0.15)" }}
           >
             <ListItemAvatar>
               {p.avatar ? (
@@ -55,8 +65,33 @@ export default function ListParticipant({ type, participants, fetchRows }) {
         ))}
       </List>
 
+      <Button
+        onClick={toggleCreate}
+        disabled={
+          !user.active || user.completed || type === "official"
+            ? user.category === "univ"
+              ? participants.length >= 2
+              : participants.length >= 3
+            : participants.length >= 14
+        }
+        fullWidth
+        size="large"
+        variant="contained"
+        sx={{ textTransform: "unset" }}
+      >
+        <Add sx={{ mr: 1 }} />
+        Tambah {type === "participant" ? "peserta" : type}
+      </Button>
+
+      <Create
+        open={openCreate}
+        type={type}
+        onClose={toggleCreate}
+        fetchRows={fetchRows}
+      />
+
       <Detail
-        open={open}
+        open={openDetail}
         participant={
           typeof selectedParticipant !== "null" &&
           participants[selectedParticipant]
