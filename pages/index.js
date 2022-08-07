@@ -12,21 +12,23 @@ export default function Index({ user, global }) {
   );
 }
 
-export const getServerSideProps = withSession(async function getServerSideProps(
-  ctx
-) {
-  if (!ctx.req.user) {
+export const getServerSideProps = withSessionSsr(
+  async function getServerSideProps(ctx) {
+    const isLoggedIn = ctx.req.session.getEvent("admin");
+
+    if (!isLoggedIn) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/login",
+        },
+      };
+    }
+
     return {
-      redirect: {
-        permanent: false,
-        destination: "/login",
+      props: {
+        global: { page: {}, ua: ctx.req.headers["user-agent"] },
       },
     };
   }
-
-  return {
-    props: {
-      global: { page: {}, ua: ctx.req.headers["user-agent"] },
-    },
-  };
-});
+);

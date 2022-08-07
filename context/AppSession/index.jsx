@@ -1,13 +1,13 @@
 import { createContext, useContext } from "react";
-import { withSession } from "./services/middlewares";
+import { withSessionSsr, withSession } from "./services/middlewares";
 
 const context = {};
 
 const AppSessionContext = createContext(context);
 
-export function AppSessionContextProvider({ children, context }) {
+export function AppSessionContextProvider({ children, session }) {
   return (
-    <AppSessionContext.Provider value={context}>
+    <AppSessionContext.Provider value={session}>
       {children}
     </AppSessionContext.Provider>
   );
@@ -15,4 +15,4 @@ export function AppSessionContextProvider({ children, context }) {
 
 export const useAppSessionContext = () => useContext(AppSessionContext);
 
-export { withSession };
+export { withSessionSsr, withSession };

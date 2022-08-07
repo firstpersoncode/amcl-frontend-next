@@ -23,6 +23,13 @@ export default function Official({ type, onClose, fetchRows }) {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
 
+  const [message, setMessage] = useState("");
+  const [openDialogMessage, setOpenDialogMessage] = useState(false);
+
+  const toggleMessage = () => {
+    setOpenDialogMessage(!openDialogMessage);
+  };
+
   const handleChange = (name) => (e) => {
     setValues((v) => ({ ...v, [name]: e.target.value }));
     setErrors((v) => ({ ...v, [name]: undefined }));
@@ -49,7 +56,7 @@ export default function Official({ type, onClose, fetchRows }) {
     body.append("file", avatar);
     body.append("type", "avatar");
     body.append("ownerId", ownerId);
-    return axios.post("/api/participants/upload", body);
+    return axios.post("/api/common/upload?e=user", body);
   };
 
   const [license, setLicense] = useState();
@@ -62,13 +69,13 @@ export default function Official({ type, onClose, fetchRows }) {
     body.append("file", license);
     body.append("type", "license");
     body.append("ownerId", ownerId);
-    return axios.post("/api/participants/upload", body);
+    return axios.post("/api/common/upload?e=user", body);
   };
 
   const handleCreate = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post("/api/participants/create", {
+      const res = await axios.post("/api/common/participant/create?e=user", {
         participant: {
           ...values,
           type,
@@ -82,10 +89,10 @@ export default function Official({ type, onClose, fetchRows }) {
         if (license) await uploadLicenseToServer(res.data.id);
       }
     } catch (err) {
-      // if (err.response?.data) {
-      //   setMessage(err.response.data);
-      //   setOpenDialogMessage(true);
-      // }
+      if (err.response?.data) {
+        setMessage(err.response.data);
+        toggleMessage();
+      }
       console.error(err.response?.data || err);
     }
     setIsLoading(false);
@@ -262,6 +269,14 @@ export default function Official({ type, onClose, fetchRows }) {
           <Button onClick={closeConfirm}>Batal</Button>
           <Button onClick={handleCreate}>Simpan</Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDialogMessage} onClose={handleCloseDialogMessage}>
+        <DialogContent>
+          <Typography variant="p" component="div" sx={{ textAlign: "center" }}>
+            {message}
+          </Typography>
+        </DialogContent>
       </Dialog>
     </>
   );

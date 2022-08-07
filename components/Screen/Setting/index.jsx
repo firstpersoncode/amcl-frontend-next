@@ -31,7 +31,7 @@ export default function Setting() {
   const { replace } = useRouter();
   const onLogout = async () => {
     setIsLoading(true);
-    await axios.get("/api/logout");
+    await axios.get("/api/common/logout?e=user");
     setIsLoading(false);
     replace("/login");
   };

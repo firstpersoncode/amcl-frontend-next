@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 module.exports = () => {
   return {
-    reactStrictMode: true,
-    swcMinify: true,
+    // reactStrictMode: true,
+    // swcMinify: true,
     env: {
       BUILD_ENV: process.env.BUILD_ENV,
       DASHBOARD_URL: process.env.DASHBOARD_URL,

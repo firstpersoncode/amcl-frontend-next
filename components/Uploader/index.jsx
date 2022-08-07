@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Card,
@@ -6,25 +6,11 @@ import {
   CardMedia,
   Dialog,
   DialogContent,
-  FormControlLabel,
   Typography,
 } from "@mui/material";
 import { Upload } from "@mui/icons-material";
-import axios from "axios";
-import Loader from "./Loader";
 
-export default function Uploader({
-  label,
-  type,
-  value,
-  ownerId,
-  onChange,
-  onUpload,
-  submit,
-}) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [saved, setSaved] = useState(false);
+export default function Uploader({ label, value, onChange }) {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
 
@@ -32,7 +18,6 @@ export default function Uploader({
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0];
 
-      setSaved(false);
       setImage(i);
       setCreateObjectURL(URL.createObjectURL(i));
 
@@ -40,36 +25,7 @@ export default function Uploader({
     }
   };
 
-  // const uploadToServer = useCallback(async () => {
-  //   setIsLoading(true);
-  //   console.log(ownerId);
-  //   try {
-  //     const body = new FormData();
-  //     body.append("file", image);
-  //     body.append("type", type);
-  //     body.append("ownerId", ownerId);
-  //     await axios.post("/api/participants/upload", body);
-  //     setSaved(true);
-  //   } catch (err) {
-  //     if (err.response?.data) setMessage(err.response.data);
-  //     setOpenDialogMessage(true);
-  //     console.error(err);
-  //   }
-  //   setIsLoading(false);
-  //   onUpload();
-  // }, [image, type, ownerId, onUpload]);
-
-  const [openDialogMessage, setOpenDialogMessage] = useState(false);
-
-  const handleCloseDialogMessage = () => {
-    setOpenDialogMessage(false);
-  };
-
-  // useEffect(() => {
-  //   console.log("SUBMIT", submit);
-
-  //   if (submit) uploadToServer();
-  // }, [submit, uploadToServer]);
+  
 
   return (
     <>
@@ -106,20 +62,6 @@ export default function Uploader({
             />
           </Button>
         )}
-
-        {isLoading && <Loader />}
-
-        <Dialog open={openDialogMessage} onClose={handleCloseDialogMessage}>
-          <DialogContent>
-            <Typography
-              variant="p"
-              component="div"
-              sx={{ textAlign: "center" }}
-            >
-              {message}
-            </Typography>
-          </DialogContent>
-        </Dialog>
       </Card>
     </>
   );

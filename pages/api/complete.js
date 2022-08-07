@@ -1,17 +1,29 @@
-import axios from "axios";
-import getToken from "utils/getToken";
+import { withSession } from "context/AppSession";
+import { createQRcode, deleteQRcodesBySchool } from "prisma/services/qrcode";
+import { getSchool, updateSchool } from "prisma/services/school";
+import generateUID from "utils/generateUID";
 
-export default async function complete(req, res) {
-  if (req.method !== "GET") return res.status(404).send();
-  const token = getToken({ req, res });
+export default withSession(
+  async function complete(req, res) {
+    const school = await getSchool(user.id);
+    if (!school) return res.status(404).send();
 
-  try {
-    await axios.get(process.env.DASHBOARD_URL + "/user/complete", {
-      headers: { "x-api-key": process.env.DASHBOARD_API_KEY, "x-token": token },
-    });
+    if (school.completed) return res.status(403).send("QR Code sudah dibuat");
+
+    await deleteQRcodesBySchool(school.id);
+    await updateSchool(school.idString, { completed: true });
+
+    const { participants } = school;
+    for (const participant of participants) {
+      const qrcode = {
+        idString: `${participant.idString}-${generateUID()}`,
+        ownerId: participant.id,
+      };
+
+      await createQRcode(qrcode);
+    }
 
     res.status(201).send();
-  } catch (err) {
-    return res.status(500).send(err.response?.data || err.toString());
-  }
-}
+  },
+  { roles: ["user"] }
+);

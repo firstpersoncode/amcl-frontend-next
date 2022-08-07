@@ -26,6 +26,13 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
   const [errors, setErrors] = useState({});
   const [isDirty, setIsDirty] = useState(false);
 
+  const [message, setMessage] = useState("");
+  const [openDialogMessage, setOpenDialogMessage] = useState(false);
+
+  const toggleMessage = () => {
+    setOpenDialogMessage(!openDialogMessage);
+  };
+
   const handleChange = (name) => (e) => {
     setValues((v) => ({ ...v, [name]: e.target.value }));
     setErrors((v) => ({ ...v, [name]: undefined }));
@@ -67,7 +74,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     body.append("file", avatar);
     body.append("type", "avatar");
     body.append("ownerId", ownerId);
-    return axios.post("/api/participants/upload", body);
+    return axios.post("/api/common/upload?e=user", body);
   };
 
   const fileLicense =
@@ -84,7 +91,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     body.append("file", license);
     body.append("type", "license");
     body.append("ownerId", ownerId);
-    return axios.post("/api/participants/upload", body);
+    return axios.post("/api/common/upload?e=user", body);
   };
 
   const handleUpdate = async () => {
@@ -97,7 +104,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
 
     setIsLoading(true);
     try {
-      await axios.post("/api/participants/update", {
+      await axios.post("/api/common/participant/update?e=user", {
         idString: participant.idString,
         participant: { ...data, avatar: undefined },
       });
@@ -105,10 +112,10 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
       if (avatar) await uploadAvatarToServer(participant.id);
       if (license) await uploadLicenseToServer(participant.id);
     } catch (err) {
-      // if (err.response?.data) {
-      //   setMessage(err.response.data);
-      //   setOpenDialogMessage(true);
-      // }
+      if (err.response?.data) {
+        setMessage(err.response.data);
+        toggleMessage();
+      }
       console.error(err.response?.data || err);
     }
 
@@ -133,7 +140,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
   const handleArchive = async () => {
     setIsLoading(true);
     try {
-      await axios.post("/api/participants/archive", {
+      await axios.post("/api/common/participant/archive?e=user", {
         idString: participant.idString,
       });
     } catch (err) {
@@ -350,6 +357,14 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
           <Button onClick={closeConfirm}>Batal</Button>
           <Button onClick={handleUpdate}>Simpan</Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDialogMessage} onClose={handleCloseDialogMessage}>
+        <DialogContent>
+          <Typography variant="p" component="div" sx={{ textAlign: "center" }}>
+            {message}
+          </Typography>
+        </DialogContent>
       </Dialog>
     </>
   );

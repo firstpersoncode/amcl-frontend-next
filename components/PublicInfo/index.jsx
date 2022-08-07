@@ -91,7 +91,7 @@ export default function PublicInfo({ participant }) {
               <QrCode />
             </Fab>
 
-            <Typography
+            {/* <Typography
               sx={{
                 mt: 8,
                 fontSize: "10px",
@@ -109,7 +109,7 @@ export default function PublicInfo({ participant }) {
               >
                 @firstpersoncode
               </a>
-            </Typography>
+            </Typography> */}
           </Box>
         </Card>
       </Dialog>
