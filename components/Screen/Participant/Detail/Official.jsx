@@ -343,6 +343,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
         </Button>
         <Button
           type="submit"
+          sx={{ textTransform: "unset" }}
           disabled={isLoading || !isDirty}
           onClick={handleSubmit}
         >
