@@ -9,7 +9,7 @@ export default function AppBar() {
       position="fixed"
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        // backgroundColor: (theme) => theme.palette.primary.dark,
+        backgroundColor: "#c62828",
       }}
     >
       <Toolbar>

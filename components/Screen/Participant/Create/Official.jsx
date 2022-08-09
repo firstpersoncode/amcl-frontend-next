@@ -17,8 +17,11 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import axios from "axios";
 import Uploader from "components/Uploader";
 import Loader from "../Loader";
+import { useAppSessionContext } from "context/AppSession";
+import generateUID from "utils/generateUID";
 
 export default function Official({ type, onClose, fetchRows }) {
+  const user = useAppSessionContext();
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
@@ -56,7 +59,7 @@ export default function Official({ type, onClose, fetchRows }) {
     body.append("file", avatar);
     body.append("type", "avatar");
     body.append("ownerId", ownerId);
-    return axios.post("/api/common/upload?e=user", body);
+    return axios.post("/api/common/upload", body);
   };
 
   const [license, setLicense] = useState();
@@ -69,15 +72,18 @@ export default function Official({ type, onClose, fetchRows }) {
     body.append("file", license);
     body.append("type", "license");
     body.append("ownerId", ownerId);
-    return axios.post("/api/common/upload?e=user", body);
+    return axios.post("/api/common/upload", body);
   };
 
   const handleCreate = async () => {
     setIsLoading(true);
+
     try {
-      const res = await axios.post("/api/common/participant/create?e=user", {
+      const res = await axios.post("/api/common/participant/create", {
         participant: {
           ...values,
+          idString: `${user.idString}-${generateUID()}`,
+          schoolId: user.id,
           type,
           active: true,
           archived: false,
@@ -256,7 +262,12 @@ export default function Official({ type, onClose, fetchRows }) {
       </DialogContent>
 
       <DialogActions>
-        <Button type="submit" disabled={isLoading} onClick={handleSubmit}>
+        <Button
+          sx={{ textTransform: "unset" }}
+          type="submit"
+          disabled={isLoading}
+          onClick={handleSubmit}
+        >
           Simpan
         </Button>
       </DialogActions>
@@ -271,7 +282,7 @@ export default function Official({ type, onClose, fetchRows }) {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={openDialogMessage} onClose={handleCloseDialogMessage}>
+      <Dialog open={openDialogMessage} onClose={toggleMessage}>
         <DialogContent>
           <Typography variant="p" component="div" sx={{ textAlign: "center" }}>
             {message}

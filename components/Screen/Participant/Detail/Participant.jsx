@@ -26,6 +26,13 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
   const [errors, setErrors] = useState({});
   const [isDirty, setIsDirty] = useState(false);
 
+  const [message, setMessage] = useState("");
+  const [openDialogMessage, setOpenDialogMessage] = useState(false);
+
+  const toggleMessage = () => {
+    setOpenDialogMessage(!openDialogMessage);
+  };
+
   const handleChange = (name) => (e) => {
     setValues((v) => ({ ...v, [name]: e.target.value }));
     setErrors((v) => ({ ...v, [name]: undefined }));
@@ -72,7 +79,7 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
     body.append("file", avatar);
     body.append("type", "avatar");
     body.append("ownerId", ownerId);
-    return axios.post("/api/common/upload?e=user", body);
+    return axios.post("/api/common/upload", body);
   };
 
   const handleUpdate = async () => {
@@ -85,17 +92,17 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
 
     setIsLoading(true);
     try {
-      await axios.post("/api/common/participant/update?e=user", {
+      await axios.post("/api/common/participant/update", {
         idString: participant.idString,
         participant: { ...data, avatar: undefined },
       });
 
       if (avatar) await uploadAvatarToServer(participant.id);
     } catch (err) {
-      // if (err.response?.data) {
-      //   setMessage(err.response.data);
-      //   setOpenDialogMessage(true);
-      // }
+      if (err.response?.data) {
+        setMessage(err.response.data);
+        setOpenDialogMessage(true);
+      }
       console.error(err.response?.data || err);
     }
 
@@ -120,14 +127,14 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
   const handleArchive = async () => {
     setIsLoading(true);
     try {
-      await axios.post("/api/common/participant/archive?e=user", {
+      await axios.post("/api/common/participant/archive", {
         idString: participant.idString,
       });
     } catch (err) {
-      // if (err.response?.data) {
-      //   setMessage(err.response.data);
-      //   setOpenDialogMessage(true);
-      // }
+      if (err.response?.data) {
+        setMessage(err.response.data);
+        setOpenDialogMessage(true);
+      }
       console.error(err.response?.data || err);
     }
     setIsLoading(false);
@@ -149,7 +156,12 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
           target="_blank"
           rel="noreferrer"
         >
-          <Button variant="contained" size="small">
+          <Button
+            sx={{ textTransform: "unset" }}
+            variant="contained"
+            color="secondary"
+            size="small"
+          >
             <Person sx={{ mr: 1 }} />
             <Typography sx={{ fontSize: "12px" }}>
               {participant.idString}
@@ -340,10 +352,17 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
       </DialogContent>
 
       <DialogActions>
-        <Button disabled={isLoading} onClick={handleSubmitArchive}>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ textTransform: "unset" }}
+          disabled={isLoading}
+          onClick={handleSubmitArchive}
+        >
           Hapus
         </Button>
         <Button
+          sx={{ textTransform: "unset" }}
           type="submit"
           disabled={isLoading || !isDirty}
           onClick={handleSubmit}
@@ -370,6 +389,14 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
           <Button onClick={closeConfirm}>Batal</Button>
           <Button onClick={handleUpdate}>Simpan</Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDialogMessage} onClose={toggleMessage}>
+        <DialogContent>
+          <Typography variant="p" component="div" sx={{ textAlign: "center" }}>
+            {message}
+          </Typography>
+        </DialogContent>
       </Dialog>
     </>
   );

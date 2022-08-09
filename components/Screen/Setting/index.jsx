@@ -31,7 +31,7 @@ export default function Setting() {
   const { replace } = useRouter();
   const onLogout = async () => {
     setIsLoading(true);
-    await axios.get("/api/common/logout?e=user");
+    await axios.get("/api/common/logout");
     setIsLoading(false);
     replace("/login");
   };
@@ -70,9 +70,9 @@ export default function Setting() {
         onClick={toggleQRConfirmation}
         fullWidth
         size="large"
+        color="secondary"
         variant="contained"
         sx={{ textTransform: "unset", mb: 2 }}
-        color="success"
       >
         <QrCode sx={{ mr: 1 }} />
         Generate QR Code
@@ -82,8 +82,8 @@ export default function Setting() {
         onClick={toggleHelp}
         fullWidth
         size="large"
-        variant="contained"
         color="secondary"
+        variant="contained"
         sx={{ textTransform: "unset", mb: 2 }}
       >
         <Help sx={{ mr: 1 }} />
@@ -111,9 +111,8 @@ export default function Setting() {
         {isLoading && <Loader />}
         <DialogContent>
           <Typography>
-            Jika Anda melanjutkan pembuatan QR Code untuk para peserta Anda,
-            maka Anda tidak dapat lagi melakukan pendaftaran peserta. Dengan ini
-            Anda dianggap telah selesai melakukan pendaftaran.
+            Jika Anda setuju dengan ini, maka Anda tidak dapat lagi mengisi /
+            mengubah data peserta Anda.
           </Typography>
           <Typography sx={{ mt: 2, fontSize: "14px" }}>
             Apakah Anda yakin ingin menyelesaikan pendaftaran?
@@ -122,6 +121,7 @@ export default function Setting() {
         <DialogActions>
           <Button
             sx={{ textTransform: "unset" }}
+            color="secondary"
             onClick={toggleQRConfirmation}
           >
             Batal

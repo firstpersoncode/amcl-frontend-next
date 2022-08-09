@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { QrCode } from "@mui/icons-material";
 import {
   Avatar,
-  Button,
   Card,
   CardMedia,
   Dialog,
@@ -10,12 +9,8 @@ import {
   Fab,
   Typography,
   Box,
-  Divider,
 } from "@mui/material";
 import { QRCodeSVG } from "qrcode.react";
-import axios from "axios";
-import Uploader from "components/Uploader";
-import { useRouter } from "next/router";
 
 export default function PublicInfo({ participant }) {
   const fileAvatar =

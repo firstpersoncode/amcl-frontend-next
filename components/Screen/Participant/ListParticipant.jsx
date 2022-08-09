@@ -40,36 +40,38 @@ export default function ListParticipant({ type, participants, fetchRows }) {
       : participants.length >= 14;
   return (
     <>
-      <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {participants.map((p, i) => (
-          <ListItemButton
-            key={`item-${i}`}
-            alignItems="flex-start"
-            onClick={onClickParticipant(i)}
-          >
-            <ListItemAvatar>
-              {p.avatar ? (
-                <Avatar
-                  alt={p.avatar.url}
-                  src={p.avatar.url}
-                  width={40}
-                  height={40}
-                />
-              ) : (
-                <Avatar width={40} height={40} />
-              )}
-            </ListItemAvatar>
-            <ListItemText
-              primary={<Typography color="text.primary">{p.name}</Typography>}
-              secondary={
-                <Typography variant="body2" color="text.primary">
-                  {p.email}
-                </Typography>
-              }
-            />
-          </ListItemButton>
-        ))}
-      </List>
+      {Boolean(participants.length) && (
+        <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+          {participants.map((p, i) => (
+            <ListItemButton
+              key={`item-${i}`}
+              alignItems="flex-start"
+              onClick={onClickParticipant(i)}
+            >
+              <ListItemAvatar>
+                {p.avatar ? (
+                  <Avatar
+                    alt={p.avatar.url}
+                    src={p.avatar.url}
+                    width={40}
+                    height={40}
+                  />
+                ) : (
+                  <Avatar width={40} height={40} />
+                )}
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Typography color="text.primary">{p.name}</Typography>}
+                secondary={
+                  <Typography variant="body2" color="text.primary">
+                    {p.email}
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          ))}
+        </List>
+      )}
 
       <Button
         onClick={toggleCreate}
@@ -77,7 +79,8 @@ export default function ListParticipant({ type, participants, fetchRows }) {
         fullWidth
         size="large"
         variant="contained"
-        sx={{ textTransform: "unset" }}
+        color="secondary"
+        sx={{ textTransform: "unset", mb: 2 }}
       >
         <Add sx={{ mr: 1 }} />
         Tambah {type === "participant" ? "peserta" : type}

@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { Paper, BottomNavigation, BottomNavigationAction } from "@mui/material";
+import {
+  Paper,
+  BottomNavigation,
+  BottomNavigationAction,
+  Typography,
+} from "@mui/material";
 import { Group, Settings, Home } from "@mui/icons-material";
 
 export default function Navigation() {
@@ -25,22 +30,49 @@ export default function Navigation() {
       >
         <BottomNavigationAction
           onClick={onClick("/")}
-          label={value === "/" ? "Home" : ""}
+          label={
+            <Typography
+              color={value === "/" ? "secondary" : undefined}
+              variant="span"
+            >
+              Home
+            </Typography>
+          }
           value="/"
-          icon={<Home />}
+          icon={<Home color={value === "/" ? "secondary" : undefined} />}
         />
 
         <BottomNavigationAction
           onClick={onClick("/participant")}
-          label={value === "/participant" ? "Peserta" : ""}
+          label={
+            <Typography
+              color={value === "/participant" ? "secondary" : undefined}
+              variant="span"
+            >
+              Peserta
+            </Typography>
+          }
           value="/participant"
-          icon={<Group />}
+          color={value === "/participant" ? "secondary" : undefined}
+          icon={
+            <Group color={value === "/participant" ? "secondary" : undefined} />
+          }
         />
         <BottomNavigationAction
           onClick={onClick("/setting")}
-          label={value === "/setting" ? "Pengaturan" : ""}
+          label={
+            <Typography
+              color={value === "/setting" ? "secondary" : undefined}
+              variant="span"
+            >
+              Pengaturan
+            </Typography>
+          }
           value="/setting"
-          icon={<Settings />}
+          color={value === "/setting" ? "secondary" : undefined}
+          icon={
+            <Settings color={value === "/setting" ? "secondary" : undefined} />
+          }
         />
       </BottomNavigation>
     </Paper>

@@ -1,4 +1,4 @@
-import { InfoOutlined } from "@mui/icons-material";
+import { Group, InfoOutlined, Settings } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -7,10 +7,13 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  Dialog,
+  DialogContent,
   Typography,
 } from "@mui/material";
 import { useAppSessionContext } from "context/AppSession";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import News from "./News";
 
 export default function Home() {
@@ -22,10 +25,9 @@ export default function Home() {
       <Typography variant="h5">{user.name}</Typography>
       <Card elevation={0} sx={{ my: 2, backgroundColor: "#eee" }}>
         <CardContent sx={{ display: "flex" }}>
-          <InfoOutlined color="secondary" sx={{ mr: 2 }} />
+          <InfoOutlined color="primary" sx={{ mr: 2 }} />
           <Box>
             <Typography sx={{ mb: 2 }}>
-              Status akun:{" "}
               {user.completed ? (
                 <Chip
                   size="small"
@@ -37,7 +39,7 @@ export default function Home() {
                 <Chip
                   size="small"
                   label="Aktif"
-                  color="secondary"
+                  color="primary"
                   variant="outlined"
                 />
               ) : (
@@ -53,80 +55,58 @@ export default function Home() {
             {user.completed ? (
               <Typography variant="body2">
                 Pendaftaran telah selesai, dan QR Code telah dibagikan.
-                <br />
-                Selamat berjuang!
               </Typography>
             ) : user.active ? (
               <Typography variant="body2">
-                Saat ini Anda sudah dapat melengkapi{" "}
+                Lengkapi data{" "}
                 <Link href="/participant" passHref>
                   <a>
                     <Typography
                       variant="body2"
                       sx={{
                         display: "inline",
-                        color: (theme) => theme.palette.secondary.main,
+                        color: (theme) => theme.palette.primary.main,
                         fontWeight: "bold",
                       }}
                     >
-                      data peserta
+                      <Group sx={{ fontSize: "15px" }} /> Peserta
                     </Typography>
                   </a>
                 </Link>{" "}
                 untuk tim {user.branch === "futsal" ? "Futsal" : "Dance"} Anda.
-                <br />
-                <br />
-                {"'Segera selesaikan pendaftaran sebelum hari pertandingan.'"}
               </Typography>
             ) : (
               <Typography variant="body2">
-                Anda belum dapat melakukan pendaftaran peserta.
-                <br />
                 Mohon menunggu beberapa saat lagi.
               </Typography>
             )}
           </Box>
         </CardContent>
-        {user.active && (
-          <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link href="/participant" passHref>
-              <a>
-                <Button
-                  sx={{ textTransform: "unset" }}
-                  color="secondary"
-                  variant="contained"
-                  size="small"
-                >
-                  Daftarkan Peserta
-                </Button>
-              </a>
-            </Link>
-          </CardActions>
-        )}
       </Card>
 
       {!user.completed && user.active && (
         <Card elevation={0} sx={{ my: 2, backgroundColor: "#eee" }}>
           <CardContent sx={{ display: "flex" }}>
-            <InfoOutlined color="secondary" sx={{ mr: 2 }} />
+            <InfoOutlined color="primary" sx={{ mr: 2 }} />
             <Typography variant="body2">
-              Jika Anda telah selesai mengisi data peserta Anda, segera aktifkan
-              QR Code untuk semua peserta dengan pergi ke menu{" "}
+              Jika Anda telah selesai, segera aktifkan QR Code untuk semua
+              peserta dengan pergi ke menu{" "}
               <Link href="/setting" passHref>
                 <a>
                   <Typography
                     variant="body2"
                     sx={{
                       display: "inline",
-                      color: (theme) => theme.palette.secondary.main,
+                      color: (theme) => theme.palette.primary.main,
                       fontWeight: "bold",
                     }}
                   >
-                    Setting
+                    <Settings sx={{ fontSize: "14px" }} />
+                    Pengaturan
                   </Typography>
                 </a>
               </Link>
-              , lalu klik tombol {`"Generate QR Code"`}.
+              , lalu klik tombol <strong>{`"Generate QR Code"`}</strong>.
             </Typography>
           </CardContent>
         </Card>

@@ -5,9 +5,13 @@ import generateUID from "utils/generateUID";
 
 export default withSession(
   async function complete(req, res) {
-    const school = await getSchool(user.id);
-    if (!school) return res.status(404).send();
+    const { event: user } = req.session?.getEvent("user");
 
+    const school = await getSchool(user.idString);
+
+    if (!school) return res.status(404).send();
+    if (!school.participants.length)
+      return res.status(403).send("Belum ada peserta yang terdaftar");
     if (school.completed) return res.status(403).send("QR Code sudah dibuat");
 
     await deleteQRcodesBySchool(school.id);
@@ -22,7 +26,13 @@ export default withSession(
 
       await createQRcode(qrcode);
     }
-
+    req.session.setEvent("user", {
+      event: {
+        ...user,
+        completed: true,
+      },
+      maxAge: 60 * 60 * 24 * 1, // 1 day
+    });
     res.status(201).send();
   },
   { roles: ["user"] }

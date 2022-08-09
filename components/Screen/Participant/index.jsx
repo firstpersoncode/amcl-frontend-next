@@ -8,21 +8,6 @@ import { useRouter } from "next/router";
 
 export default function Participant() {
   const user = useAppSessionContext();
-  const [openDialogMessage, setOpenDialogMessage] = useState(false);
-  const toggleDialogMessage = useCallback(() => {
-    setOpenDialogMessage((v) => !v);
-  }, []);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    if (!user.active) {
-      setMessage(
-        "Saat ini Anda belum dapat mendaftarkan peserta Anda. Team kami sedang melakukan konfirmasi akun. Silahkan tunggu beberapa saat lagi"
-      );
-
-      setOpenDialogMessage(true);
-    }
-  }, [user.active]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [participants, setParticipants] = useState([]);
@@ -31,10 +16,10 @@ export default function Participant() {
   const fetchRows = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post("/api/common/participant/read?e=user", {
+      const res = await axios.post("/api/common/participant/read", {
         take: 17,
         skip: 0,
-        filter: { schoolId: user.oid },
+        filter: { schoolId: user.id },
       });
       if (res?.data?.length) {
         setParticipants(
@@ -59,15 +44,13 @@ export default function Participant() {
       console.error(err);
     }
     setIsLoading(false);
-  }, []);
+  }, [user.id]);
 
   useEffect(() => {
-    if (!participants.length) fetchRows();
-  }, [participants, fetchRows]);
+    if (!participants.length || !officials.length) fetchRows();
+  }, [fetchRows]);
 
-  const { asPath } = useRouter();
-
-  if (isLoading || asPath !== "/participant") return <ListLoader />;
+  if (isLoading) return <ListLoader />;
   return (
     <>
       <ListParticipant
@@ -81,10 +64,6 @@ export default function Participant() {
         fetchRows={fetchRows}
         participants={officials}
       />
-
-      <Dialog open={openDialogMessage} onClose={toggleDialogMessage}>
-        <DialogContent>{message}</DialogContent>
-      </Dialog>
     </>
   );
 }

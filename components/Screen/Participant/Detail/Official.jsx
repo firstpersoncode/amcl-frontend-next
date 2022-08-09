@@ -74,7 +74,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     body.append("file", avatar);
     body.append("type", "avatar");
     body.append("ownerId", ownerId);
-    return axios.post("/api/common/upload?e=user", body);
+    return axios.post("/api/common/upload", body);
   };
 
   const fileLicense =
@@ -91,7 +91,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     body.append("file", license);
     body.append("type", "license");
     body.append("ownerId", ownerId);
-    return axios.post("/api/common/upload?e=user", body);
+    return axios.post("/api/common/upload", body);
   };
 
   const handleUpdate = async () => {
@@ -104,7 +104,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
 
     setIsLoading(true);
     try {
-      await axios.post("/api/common/participant/update?e=user", {
+      await axios.post("/api/common/participant/update", {
         idString: participant.idString,
         participant: { ...data, avatar: undefined },
       });
@@ -140,7 +140,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
   const handleArchive = async () => {
     setIsLoading(true);
     try {
-      await axios.post("/api/common/participant/archive?e=user", {
+      await axios.post("/api/common/participant/archive", {
         idString: participant.idString,
       });
     } catch (err) {
@@ -164,7 +164,12 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
           target="_blank"
           rel="noreferrer"
         >
-          <Button variant="contained" size="small">
+          <Button
+            sx={{ textTransform: "unset" }}
+            variant="contained"
+            color="secondary"
+            size="small"
+          >
             <Person sx={{ mr: 1 }} />
             <Typography sx={{ fontSize: "12px" }}>
               {participant.idString}
@@ -327,7 +332,13 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
       </DialogContent>
 
       <DialogActions>
-        <Button disabled={isLoading} onClick={handleSubmitArchive}>
+        <Button
+          variant="contained"
+          sx={{ textTransform: "unset" }}
+          color="secondary"
+          disabled={isLoading}
+          onClick={handleSubmitArchive}
+        >
           Hapus
         </Button>
         <Button
@@ -359,7 +370,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={openDialogMessage} onClose={handleCloseDialogMessage}>
+      <Dialog open={openDialogMessage} onClose={toggleMessage}>
         <DialogContent>
           <Typography variant="p" component="div" sx={{ textAlign: "center" }}>
             {message}

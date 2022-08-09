@@ -25,8 +25,6 @@ export default function Uploader({ label, value, onChange }) {
     }
   };
 
-  
-
   return (
     <>
       <Typography sx={{ mb: 1 }}>{label}</Typography>
@@ -50,7 +48,13 @@ export default function Uploader({ label, value, onChange }) {
             />
           </CardActionArea>
         ) : (
-          <Button fullWidth variant="contained" component="label">
+          <Button
+            sx={{ textTransform: "unset" }}
+            fullWidth
+            variant="contained"
+            color="secondary"
+            component="label"
+          >
             <Upload />
             Tambahkan file
             <input

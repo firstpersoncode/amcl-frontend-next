@@ -10,11 +10,11 @@ export default function _App({ Component, pageProps }) {
       theme={createTheme({
         palette: {
           mode: "light",
-          primary: {
-            main: "#c62828",
-          },
+          // primary: {
+          //   main: "#c62828",
+          // },
           secondary: {
-            main: "#64b5f6",
+            main: "#c62828",
           },
         },
       })}

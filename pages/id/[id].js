@@ -13,6 +13,12 @@ export async function getServerSideProps(ctx) {
     participant = await getParticipantIDCard(params.id);
   } catch (err) {}
 
+  if (!participant) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       participant,
