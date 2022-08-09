@@ -3,7 +3,7 @@ import { AppSessionContextProvider, withSessionSsr } from "context/AppSession";
 import Screen from "components/Screen";
 import { getSchool } from "prisma/services/school";
 
-export default function Page({ user, global }) {
+export default function Setting({ user, global }) {
   return (
     <AppSessionContextProvider session={user}>
       <CommonContextProvider context={global}>
