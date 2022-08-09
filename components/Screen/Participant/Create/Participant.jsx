@@ -64,13 +64,13 @@ export default function Participant({ type, onClose, fetchRows }) {
     body.append("file", avatar);
     body.append("type", "avatar");
     body.append("ownerId", ownerId);
-    return axios.post("/api/common/upload", body);
+    return axios.post("/api/upload", body);
   };
 
   const handleCreate = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post("/api/common/participant/create", {
+      const res = await axios.post("/api/participant/create", {
         participant: {
           ...values,
           idString: `${user.idString}-${generateUID()}`,

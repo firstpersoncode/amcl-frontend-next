@@ -3,6 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 
 export default function useForm() {
+  const { replace } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -57,7 +58,7 @@ export default function useForm() {
     } else {
       setIsLoading(true);
       try {
-        await axios.post("/api/common/login", { ...values });
+        await axios.post("/api/login", { ...values });
         replace("/");
       } catch (err) {
         console.error(err);
@@ -67,12 +68,10 @@ export default function useForm() {
     }
   };
 
-  const { replace } = useRouter();
-
   const onCaptchaVerify = async (c) => {
     setIsLoading(true);
     try {
-      await axios.post("/api/common/login", { ...values, captcha: c });
+      await axios.post("/api/login", { ...values, captcha: c });
       replace("/");
     } catch (err) {
       console.error(err);

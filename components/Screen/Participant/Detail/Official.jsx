@@ -74,7 +74,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     body.append("file", avatar);
     body.append("type", "avatar");
     body.append("ownerId", ownerId);
-    return axios.post("/api/common/upload", body);
+    return axios.post("/api/upload", body);
   };
 
   const fileLicense =
@@ -91,7 +91,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     body.append("file", license);
     body.append("type", "license");
     body.append("ownerId", ownerId);
-    return axios.post("/api/common/upload", body);
+    return axios.post("/api/upload", body);
   };
 
   const handleUpdate = async () => {
@@ -104,7 +104,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
 
     setIsLoading(true);
     try {
-      await axios.post("/api/common/participant/update", {
+      await axios.post("/api/participant/update", {
         idString: participant.idString,
         participant: { ...data, avatar: undefined },
       });
@@ -140,7 +140,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
   const handleArchive = async () => {
     setIsLoading(true);
     try {
-      await axios.post("/api/common/participant/archive", {
+      await axios.post("/api/participant/archive", {
         idString: participant.idString,
       });
     } catch (err) {

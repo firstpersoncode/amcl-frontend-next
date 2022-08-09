@@ -16,7 +16,7 @@ export default function Participant() {
   const fetchRows = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post("/api/common/participant/read", {
+      const res = await axios.post("/api/participant/read", {
         take: 17,
         skip: 0,
         filter: { schoolId: user.id },
