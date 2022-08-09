@@ -111,8 +111,8 @@ export default function Setting() {
         {isLoading && <Loader />}
         <DialogContent>
           <Typography>
-            Jika Anda setuju dengan ini, maka Anda tidak dapat lagi mengisi /
-            mengubah data peserta Anda.
+            Setelah ini, Anda tidak dapat lagi mengisi / mengubah data peserta
+            Anda.
           </Typography>
           <Typography sx={{ mt: 2, fontSize: "14px" }}>
             Apakah Anda yakin ingin menyelesaikan pendaftaran?
