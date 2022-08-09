@@ -21,6 +21,8 @@ import Loader from "../Loader";
 import { useAppSessionContext } from "context/AppSession";
 
 export default function Participant({ onClose, fetchRows, participant = {} }) {
+  const user = useAppSessionContext();
+
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({ ...participant });
   const [errors, setErrors] = useState({});
@@ -60,8 +62,6 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
   const closeConfirm = () => {
     setOpenConfirm(false);
   };
-
-  const user = useAppSessionContext();
 
   const isFutsal = user.branch === "futsal";
   const isUniv = user.category === "univ";
@@ -356,7 +356,7 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
           variant="contained"
           color="secondary"
           sx={{ textTransform: "unset" }}
-          disabled={isLoading}
+          disabled={!user.active || user.completed || isLoading}
           onClick={handleSubmitArchive}
         >
           Hapus
@@ -364,7 +364,7 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
         <Button
           sx={{ textTransform: "unset" }}
           type="submit"
-          disabled={isLoading || !isDirty}
+          disabled={!user.active || user.completed || isLoading || !isDirty}
           onClick={handleSubmit}
         >
           Simpan

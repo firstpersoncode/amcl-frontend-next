@@ -21,6 +21,7 @@ import { useAppSessionContext } from "context/AppSession";
 import Link from "next/link";
 
 export default function Official({ onClose, fetchRows, participant = {} }) {
+  const user = useAppSessionContext();
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({ ...participant });
   const [errors, setErrors] = useState({});
@@ -336,7 +337,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
           variant="contained"
           sx={{ textTransform: "unset" }}
           color="secondary"
-          disabled={isLoading}
+          disabled={!user.active || user.completed || isLoading}
           onClick={handleSubmitArchive}
         >
           Hapus
@@ -344,7 +345,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
         <Button
           type="submit"
           sx={{ textTransform: "unset" }}
-          disabled={isLoading || !isDirty}
+          disabled={!user.active || user.completed || isLoading || !isDirty}
           onClick={handleSubmit}
         >
           Simpan
