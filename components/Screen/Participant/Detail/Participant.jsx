@@ -31,6 +31,25 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
   const [message, setMessage] = useState("");
   const [openDialogMessage, setOpenDialogMessage] = useState(false);
 
+  const isFutsal = user.branch === "futsal";
+  const isUniv = user.category === "univ";
+
+  const fileAvatar =
+    values.files?.length && values.files.find((file) => file.type === "avatar");
+
+  const [avatar, setAvatar] = useState();
+  const handleChangeAvatar = ({ image }) => {
+    setAvatar(image);
+    setIsDirty(true);
+  };
+  const uploadAvatarToServer = (ownerId) => {
+    const body = new FormData();
+    body.append("file", avatar);
+    body.append("type", "avatar");
+    body.append("ownerId", ownerId);
+    return axios.post("/api/upload", body);
+  };
+
   const toggleMessage = () => {
     setOpenDialogMessage(!openDialogMessage);
   };
@@ -51,35 +70,81 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
     setIsDirty(dirty);
   }, [participant, values]);
 
+  const validate = () => {
+    let hasError = false;
+    if (!values.name) {
+      hasError = true;
+      setErrors((v) => ({ ...v, name: "Masukkan nama" }));
+    }
+
+    if (!values.email) {
+      hasError = true;
+      setErrors((v) => ({ ...v, email: "Masukkan email" }));
+    } else if (
+      !String(values.email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+    ) {
+      hasError = true;
+      setErrors((v) => ({ ...v, email: "Format email tidak benar" }));
+    }
+
+    if (!values.dob) {
+      hasError = true;
+      setErrors((v) => ({ ...v, dob: "Masukkan tanggal lahir" }));
+    }
+
+    if (!values.studentId) {
+      hasError = true;
+      setErrors((v) => ({ ...v, studentId: "Masukkan NIS/NIM" }));
+    }
+
+    if (!isUniv && !values.class) {
+      hasError = true;
+      setErrors((v) => ({ ...v, class: "Masukkan kelas" }));
+    }
+
+    if (!values.phone) {
+      hasError = true;
+      setErrors((v) => ({ ...v, phone: "Masukkan nomor telephone" }));
+    } else if (!/^[\s()+-]*(\d[\s()+-]*){6,20}$/.test(values.phone)) {
+      hasError = true;
+      setErrors((v) => ({ ...v, phone: "Format nomor telephone tidak benar" }));
+    }
+
+    if (!values.gender) {
+      hasError = true;
+      setErrors((v) => ({ ...v, gender: "Masukkan gender" }));
+    }
+
+    if (isFutsal && !values.futsalPosition) {
+      hasError = true;
+      setErrors((v) => ({ ...v, futsalPosition: "Masukkan posisi" }));
+    }
+
+    if (!(fileAvatar || avatar)) {
+      hasError = true;
+      setErrors((v) => ({ ...v, avatar: "Masukkan foto profil" }));
+    }
+
+    return hasError;
+  };
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isDirty) return;
+    const hasError = validate();
+    if (hasError) return;
+
     setOpenConfirm(true);
   };
 
   const closeConfirm = () => {
     setOpenConfirm(false);
-  };
-
-  const isFutsal = user.branch === "futsal";
-  const isUniv = user.category === "univ";
-
-  const fileAvatar =
-    values.files?.length && values.files.find((file) => file.type === "avatar");
-
-  const [avatar, setAvatar] = useState();
-  const handleChangeAvatar = ({ image }) => {
-    setAvatar(image);
-    setIsDirty(true);
-  };
-  const uploadAvatarToServer = (ownerId) => {
-    const body = new FormData();
-    body.append("file", avatar);
-    body.append("type", "avatar");
-    body.append("ownerId", ownerId);
-    return axios.post("/api/upload", body);
   };
 
   const handleUpdate = async () => {
@@ -332,6 +397,8 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
               type="avatar"
               value={avatar || fileAvatar}
               onChange={handleChangeAvatar}
+              error={Boolean(errors.avatar)}
+              helperText={errors.avatar}
             />
 
             <TextField

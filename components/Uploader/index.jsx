@@ -10,7 +10,13 @@ import {
 } from "@mui/material";
 import { Upload } from "@mui/icons-material";
 
-export default function Uploader({ label, value, onChange }) {
+export default function Uploader({
+  label,
+  value,
+  onChange,
+  error,
+  helperText,
+}) {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
 
@@ -25,11 +31,23 @@ export default function Uploader({ label, value, onChange }) {
     }
   };
 
+  console.log("UPLOADER", label, error);
   return (
     <>
-      <Typography sx={{ mb: 1 }}>{label}</Typography>
+      <Typography
+        sx={{
+          mb: 1,
+          color: (theme) => (error ? theme.palette.error.main : undefined),
+        }}
+      >
+        {label}
+      </Typography>
 
-      <Card sx={{ mb: 2 }}>
+      <Card
+        sx={{
+          mb: 2,
+        }}
+      >
         {createObjectURL || value?.url ? (
           <CardActionArea component="label">
             <CardMedia
@@ -67,6 +85,18 @@ export default function Uploader({ label, value, onChange }) {
           </Button>
         )}
       </Card>
+
+      {helperText && (
+        <Typography
+          sx={{
+            fontSize: "12px",
+            mt: -1,
+            color: (theme) => (error ? theme.palette.error.main : undefined),
+          }}
+        >
+          {helperText}
+        </Typography>
+      )}
     </>
   );
 }

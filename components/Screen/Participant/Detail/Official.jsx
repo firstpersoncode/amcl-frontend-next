@@ -30,38 +30,6 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
   const [message, setMessage] = useState("");
   const [openDialogMessage, setOpenDialogMessage] = useState(false);
 
-  const toggleMessage = () => {
-    setOpenDialogMessage(!openDialogMessage);
-  };
-
-  const handleChange = (name) => (e) => {
-    setValues((v) => ({ ...v, [name]: e.target.value }));
-    setErrors((v) => ({ ...v, [name]: undefined }));
-  };
-
-  useEffect(() => {
-    let dirty = false;
-    for (const field in participant) {
-      if (participant[field] !== values[field]) {
-        dirty = true;
-        break;
-      }
-    }
-    setIsDirty(dirty);
-  }, [participant, values]);
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!isDirty) return;
-    setOpenConfirm(true);
-  };
-
-  const closeConfirm = () => {
-    setOpenConfirm(false);
-  };
-
   const fileAvatar =
     values.files?.length && values.files.find((file) => file.type === "avatar");
 
@@ -93,6 +61,98 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
     body.append("type", "license");
     body.append("ownerId", ownerId);
     return axios.post("/api/upload", body);
+  };
+
+  const toggleMessage = () => {
+    setOpenDialogMessage(!openDialogMessage);
+  };
+
+  const handleChange = (name) => (e) => {
+    setValues((v) => ({ ...v, [name]: e.target.value }));
+    setErrors((v) => ({ ...v, [name]: undefined }));
+  };
+
+  useEffect(() => {
+    let dirty = false;
+    for (const field in participant) {
+      if (participant[field] !== values[field]) {
+        dirty = true;
+        break;
+      }
+    }
+    setIsDirty(dirty);
+  }, [participant, values]);
+
+  const validate = () => {
+    let hasError = false;
+    if (!values.name) {
+      hasError = true;
+      setErrors((v) => ({ ...v, name: "Masukkan nama" }));
+    }
+
+    if (!values.email) {
+      hasError = true;
+      setErrors((v) => ({ ...v, email: "Masukkan email" }));
+    } else if (
+      !String(values.email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+    ) {
+      hasError = true;
+      setErrors((v) => ({ ...v, email: "Format email tidak benar" }));
+    }
+
+    if (!values.dob) {
+      hasError = true;
+      setErrors((v) => ({ ...v, dob: "Masukkan tanggal lahir" }));
+    }
+
+    if (!values.phone) {
+      hasError = true;
+      setErrors((v) => ({ ...v, phone: "Masukkan nomor telephone" }));
+    } else if (!/^[\s()+-]*(\d[\s()+-]*){6,20}$/.test(values.phone)) {
+      hasError = true;
+      setErrors((v) => ({ ...v, phone: "Format nomor telephone tidak benar" }));
+    }
+
+    if (!values.gender) {
+      hasError = true;
+      setErrors((v) => ({ ...v, gender: "Masukkan gender" }));
+    }
+
+    if (!values.officialPosition) {
+      hasError = true;
+      setErrors((v) => ({ ...v, officialPosition: "Masukkan jabatan" }));
+    }
+
+    if (!(fileAvatar || avatar)) {
+      hasError = true;
+      setErrors((v) => ({ ...v, avatar: "Masukkan foto profil" }));
+    }
+
+    if (!(fileLicense || license)) {
+      hasError = true;
+      setErrors((v) => ({ ...v, license: "Masukkan foto lisensi" }));
+    }
+
+    return hasError;
+  };
+
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isDirty) return;
+    const hasError = validate();
+    if (hasError) return;
+
+    setOpenConfirm(true);
+  };
+
+  const closeConfirm = () => {
+    setOpenConfirm(false);
   };
 
   const handleUpdate = async () => {
@@ -204,6 +264,7 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
               value={values.name || ""}
               onChange={handleChange("name")}
               helperText={errors.name}
+              error={Boolean(errors.name)}
               InputLabelProps={{ shrink: true }}
             />
 
@@ -306,6 +367,8 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
               type="avatar"
               value={avatar || fileAvatar}
               onChange={handleChangeAvatar}
+              error={Boolean(errors.avatar)}
+              helperText={errors.avatar}
             />
 
             <Uploader
@@ -313,6 +376,8 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
               type="license"
               value={license || fileLicense}
               onChange={handleChangeLicense}
+              error={Boolean(errors.license)}
+              helperText={errors.license}
             />
 
             <TextField
