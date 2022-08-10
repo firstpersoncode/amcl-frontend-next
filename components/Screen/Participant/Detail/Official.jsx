@@ -127,15 +127,15 @@ export default function Official({ onClose, fetchRows, participant = {} }) {
       setErrors((v) => ({ ...v, officialPosition: "Masukkan jabatan" }));
     }
 
-    if (!(fileAvatar || avatar)) {
-      hasError = true;
-      setErrors((v) => ({ ...v, avatar: "Masukkan foto profil" }));
-    }
+    // if (!(fileAvatar || avatar)) {
+    //   hasError = true;
+    //   setErrors((v) => ({ ...v, avatar: "Masukkan foto profil" }));
+    // }
 
-    if (!(fileLicense || license)) {
-      hasError = true;
-      setErrors((v) => ({ ...v, license: "Masukkan foto lisensi" }));
-    }
+    // if (!(fileLicense || license)) {
+    //   hasError = true;
+    //   setErrors((v) => ({ ...v, license: "Masukkan foto lisensi" }));
+    // }
 
     return hasError;
   };

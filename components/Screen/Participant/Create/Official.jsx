@@ -111,15 +111,15 @@ export default function Official({ type, onClose, fetchRows }) {
       setErrors((v) => ({ ...v, officialPosition: "Masukkan jabatan" }));
     }
 
-    if (!avatar) {
-      hasError = true;
-      setErrors((v) => ({ ...v, avatar: "Masukkan foto profil" }));
-    }
+    // if (!avatar) {
+    //   hasError = true;
+    //   setErrors((v) => ({ ...v, avatar: "Masukkan foto profil" }));
+    // }
 
-    if (!license) {
-      hasError = true;
-      setErrors((v) => ({ ...v, license: "Masukkan foto lisensi" }));
-    }
+    // if (!license) {
+    //   hasError = true;
+    //   setErrors((v) => ({ ...v, license: "Masukkan foto lisensi" }));
+    // }
 
     return hasError;
   };

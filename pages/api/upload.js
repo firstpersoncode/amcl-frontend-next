@@ -126,10 +126,15 @@ export default withSession(
           )
         )
           return res.status(500).send("File tidak bisa diupload");
-        if (files.file.size > 2000000)
+        // if (files.file.size > 2000000)
+        //   return res
+        //     .status(500)
+        //     .send("File size melebihi 2mb, upload lebih kecil");
+
+        if (files.file.size > 10000000)
           return res
             .status(500)
-            .send("File size melebihi 2mb, upload lebih kecil");
+            .send("File size melebihi 10mb, upload lebih kecil");
 
         await deleteFileIfExist(fields);
         await uploadToDOSpaces(files.file);

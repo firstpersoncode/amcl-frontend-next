@@ -124,10 +124,10 @@ export default function Participant({ onClose, fetchRows, participant = {} }) {
       setErrors((v) => ({ ...v, futsalPosition: "Masukkan posisi" }));
     }
 
-    if (!(fileAvatar || avatar)) {
-      hasError = true;
-      setErrors((v) => ({ ...v, avatar: "Masukkan foto profil" }));
-    }
+    // if (!(fileAvatar || avatar)) {
+    //   hasError = true;
+    //   setErrors((v) => ({ ...v, avatar: "Masukkan foto profil" }));
+    // }
 
     return hasError;
   };
