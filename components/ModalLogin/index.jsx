@@ -40,7 +40,7 @@ export default function ModalLogin() {
 
   return (
     <>
-      <Dialog open>
+      <Dialog open scroll="body">
         <Card
           sx={{
             position: "relative",

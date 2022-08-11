@@ -42,7 +42,7 @@ export default function ModalRegister() {
 
   return (
     <>
-      <Dialog open>
+      <Dialog open scroll="body">
         <Card
           sx={{
             position: "relative",
