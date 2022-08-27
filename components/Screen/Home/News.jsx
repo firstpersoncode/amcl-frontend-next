@@ -12,7 +12,7 @@ import SwipeableViews from "react-swipeable-views";
 
 export default function News() {
   return (
-    <>
+    <Box sx={{ mb: 6 }}>
       <Typography variant="h6" sx={{ my: 2 }}>
         News
       </Typography>
@@ -109,6 +109,6 @@ export default function News() {
           </Box>
         </SwipeableViews>
       </Box>
-    </>
+    </Box>
   );
 }
