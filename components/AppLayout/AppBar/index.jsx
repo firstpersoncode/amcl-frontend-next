@@ -29,7 +29,7 @@ export default function AppBar() {
 
           <Link href="/" passHref>
             <a>
-              <Typography>Makassar Champion League</Typography>
+              <Typography>Makassar Champions League</Typography>
             </a>
           </Link>
         </Box>
