@@ -70,7 +70,7 @@ export default function Setting() {
         onClick={toggleQRConfirmation}
         fullWidth
         size="large"
-        color="secondary"
+        color="primary"
         variant="contained"
         sx={{ textTransform: "unset", mb: 2 }}
       >
@@ -82,7 +82,7 @@ export default function Setting() {
         onClick={toggleHelp}
         fullWidth
         size="large"
-        color="secondary"
+        color="primary"
         variant="contained"
         sx={{ textTransform: "unset", mb: 2 }}
       >
@@ -111,8 +111,8 @@ export default function Setting() {
         {isLoading && <Loader />}
         <DialogContent>
           <Typography>
-            Setelah ini, Anda tidak dapat lagi mengisi / mengubah data peserta
-            Anda.
+            Setelah ini, Anda tidak dapat lagi mengisi ataupun mengubah data
+            peserta Anda.
           </Typography>
           <Typography sx={{ mt: 2, fontSize: "14px" }}>
             Apakah Anda yakin ingin menyelesaikan pendaftaran?

@@ -97,7 +97,7 @@ module.exports.getParticipantIDCard = async (idString) => {
       type: true,
       // class: true,
       // futsalPosition: true,
-      // officialPosition: true,
+      officialPosition: true,
       instagram: true,
 
       files: {

@@ -14,7 +14,7 @@ export default function _App({ Component, pageProps }) {
           //   main: "#c62828",
           // },
           secondary: {
-            main: "#c62828",
+            main: "#470000",
           },
         },
       })}

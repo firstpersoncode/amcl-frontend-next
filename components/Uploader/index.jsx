@@ -31,7 +31,6 @@ export default function Uploader({
     }
   };
 
-  console.log("UPLOADER", label, error);
   return (
     <>
       <Typography

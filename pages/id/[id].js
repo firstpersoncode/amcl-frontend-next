@@ -1,5 +1,4 @@
 import PublicInfo from "components/PublicInfo";
-import axios from "axios";
 import { getParticipantIDCard } from "prisma/services/participant";
 
 export default function ID({ participant }) {
