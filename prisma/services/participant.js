@@ -93,10 +93,13 @@ module.exports.getParticipantIDCard = async (idString) => {
       idString: true,
       name: true,
       email: true,
+      phone: true,
+      dob: true,
       gender: true,
       type: true,
-      // class: true,
-      // futsalPosition: true,
+      studentId: true,
+      class: true,
+      futsalPosition: true,
       officialPosition: true,
       instagram: true,
 
@@ -176,7 +179,7 @@ module.exports.deleteParticipant = async (idString) => {
 module.exports.archiveParticipants = async (schoolId) => {
   const participants = await client.participant.deleteMany({
     where: {
-      schoolId,
+      school: { idString: schoolId },
     },
   });
   return participants;
