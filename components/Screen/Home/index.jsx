@@ -112,7 +112,7 @@ export default function Home() {
         </Card>
       )}
 
-      <News />
+      {/* <News /> */}
     </>
   );
 }
